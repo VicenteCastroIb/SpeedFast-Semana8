@@ -1,34 +1,33 @@
 # SpeedFast
 
-Sistema de asignación de repartidores para **SpeedFast**, una empresa de reparto a domicilio que ofrece tres tipos de servicio: comida, encomiendas y compras express.
+Sistema de cálculo de tiempos de entrega para **SpeedFast**, una empresa de reparto a domicilio que ofrece tres tipos de servicio: comida, encomiendas y compras express.
 
-Proyecto desarrollado como actividad formativa de la asignatura **Desarrollo Orientado a Objetos II** (Semana 1 — Sobrecarga y sobreescritura en clases derivadas).
+Proyecto desarrollado como actividad formativa de la asignatura **Desarrollo Orientado a Objetos II** (Semana 2 — Clase abstracta y jerarquía de herencia).
 
 ## Descripción
 
-El sistema modela distintos tipos de pedido mediante una jerarquía de clases y aplica **polimorfismo** para definir cómo se asigna un repartidor a cada uno:
+El sistema modela distintos tipos de pedido mediante una clase abstracta `Pedido` y tres subclases que heredan de ella, aplicando polimorfismo para calcular el tiempo estimado de entrega según el tipo de servicio y la distancia en kilómetros:
 
-- **Comida**: requiere repartidor con mochila térmica.
-- **Encomienda**: requiere validación de peso y embalaje.
-- **Compra Express**: debe asignarse al repartidor más cercano con disponibilidad inmediata.
+- Comida: 15 min base + 2 min por kilómetro.
+- Encomienda: 20 min base + 1.5 min por kilómetro (redondeado a entero).
+- Express: 10 min base, +5 min extra si la distancia supera los 5 km.
 
 ## Estructura del proyecto
 
-```
-src/main/java/com/puertogames/
-├── Main.java                     # Punto de entrada: instancia pedidos y demuestra el polimorfismo
-└── servicio/
-    ├── Pedido.java                # Clase base abstracta (idPedido, direccionEntrega, tipoPedido)
-    ├── PedidoComida.java          # Sobrescribe y sobrecarga asignarRepartidor()
-    ├── PedidoEncomienda.java      # Sobrescribe y sobrecarga asignarRepartidor()
-    └── PedidoExpress.java         # Sobrescribe y sobrecarga asignarRepartidor()
-```
+- `src/main/java/Main.java` — Punto de entrada: instancia pedidos y demuestra el polimorfismo.
+- `src/main/java/com/puertogames/servicio/Pedido.java` — Clase base abstracta (idPedido, direccionEntrega, distanciaKm).
+- `src/main/java/com/puertogames/servicio/PedidoComida.java` — Sobrescribe `calcularTiempoEntrega()`.
+- `src/main/java/com/puertogames/servicio/PedidoEncomienda.java` — Sobrescribe `calcularTiempoEntrega()`.
+- `src/main/java/com/puertogames/servicio/PedidoExpress.java` — Sobrescribe `calcularTiempoEntrega()`.
 
 ## Conceptos aplicados
 
-- **Herencia**: `PedidoComida`, `PedidoEncomienda` y `PedidoExpress` extienden la clase base `Pedido`.
-- **Sobreescritura (override)**: cada subclase redefine `asignarRepartidor()` con un mensaje propio según el tipo de pedido.
-- **Sobrecarga (overload)**: cada subclase implementa además `asignarRepartidor(String nombreRepartidor)`, que recibe el nombre del repartidor asignado e imprime las validaciones específicas de ese tipo de pedido.
+- Clase abstracta: `Pedido` define los atributos comunes (`idPedido`, `direccionEntrega`, `distanciaKm`) y el comportamiento común, implementando `mostrarResumen()` de forma reutilizable — llama a `calcularTiempoEntrega()` de forma polimórfica según el tipo real del objeto.
+- Método abstracto: `calcularTiempoEntrega()` se declara en `Pedido` sin implementación, obligando a cada subclase a definir su propia lógica.
+- Herencia: `PedidoComida`, `PedidoEncomienda` y `PedidoExpress` extienden `Pedido` y reutilizan sus atributos, constructor y `mostrarResumen()`.
+- Sobrescritura (override): cada subclase redefine `calcularTiempoEntrega()` con la fórmula correspondiente a su tipo de servicio.
+- Polimorfismo: en `Main`, los pedidos se almacenan como una lista de `Pedido` y se recorren de forma uniforme, aunque cada uno ejecuta su propia lógica de cálculo.
+- Atributos propios: cada subclase agrega un atributo propio además de los heredados — `PedidoComida.accesorio` (accesorio necesario para el reparto), `PedidoEncomienda.pesoKg` (peso del paquete) y `PedidoExpress.cercania` (repartidor asignado por cercanía).
 
 ## Requisitos
 
@@ -42,14 +41,14 @@ Desde IntelliJ IDEA, abrir el proyecto y ejecutar la clase `Main`.
 
 Desde línea de comandos:
 
-```bash
+```
 javac -d out $(find src/main/java -name "*.java")
-java -cp out com.puertogames.Main
+java -cp out Main
 ```
 
 ## Salida esperada (resumen)
 
-El programa imprime primero la versión **sobrescrita** de `asignarRepartidor()` para cada pedido (mensaje diferenciado por tipo), y luego la versión **sobrecargada**, incluyendo el nombre del repartidor y la validación correspondiente (mochila térmica, peso/embalaje o cercanía y disponibilidad).
+El programa crea un pedido de cada tipo (Comida, Encomienda, Express), imprime el resumen de cada uno con su dirección, distancia y tiempo estimado de entrega calculado según la fórmula propia de cada subclase.
 
 ## Autor
 

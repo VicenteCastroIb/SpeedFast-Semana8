@@ -2,17 +2,27 @@ package com.puertogames.servicio;
 
 public class PedidoEncomienda extends Pedido{
 
-    public PedidoEncomienda(int idPedido, String direccionEntrega, String tipoPedido) {
-        super(idPedido, direccionEntrega, tipoPedido);
+    private double pesoKg;
+
+    public PedidoEncomienda(int idPedido, String direccionEntrega, int distanciaKm, double pesoKg) {
+        super(idPedido, direccionEntrega, distanciaKm);
+        this.pesoKg = pesoKg;
+    }
+
+    public void mostrarResumen() {
+        System.out.println("[Pedido Encomienda #" + getIdPedido() + "]\n" + "- Peso: " + pesoKg + " Kg\n" + "- Direccion: " + getDireccionEntrega() + "\n" + "- Distancia: " + getDistanciaKm() + " Km\n" + "- Tiempo estimado de entrega: " + calcularTiempoEntrega(getDistanciaKm()) + " minutos");
     }
 
     @Override
-    public void asignarRepartidor() {
-        System.out.println("[Pedido Encomienda] \n" + "Asignando repartidor... \n" + "-> Pedido asignado a repartidor \n");
+    public int calcularTiempoEntrega(int distanciaKm){
+        return (int) Math.round(20 + 1.5 * distanciaKm);
     }
 
-    public void asignarRepartidor(String nombreRepartidor) {
-        System.out.println("[Pedido " + getTipoPedido() + " id: "+ getIdPedido() + ", direccion: "+ getDireccionEntrega()+ "] \n" + "-> Validando peso y embalaje... OK \n" + "-> Pedido asignado a " + nombreRepartidor + "\n");
+    public double getPesoKg() {
+        return pesoKg;
     }
 
+    public void setPesoKg(double pesoKg) {
+        this.pesoKg = pesoKg;
+    }
 }

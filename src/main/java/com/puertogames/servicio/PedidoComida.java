@@ -2,17 +2,28 @@ package com.puertogames.servicio;
 
 public class PedidoComida extends Pedido{
 
+    private String accesorio;
 
-    public PedidoComida(int idPedido, String direccionEntrega, String tipoPedido) {
-        super(idPedido, direccionEntrega, tipoPedido);
+
+    public PedidoComida(int idPedido, String direccionEntrega, int distanciaKm, String accesorio) {
+        super(idPedido, direccionEntrega, distanciaKm);
+        this.accesorio = accesorio;
+    }
+
+    public void mostrarResumen() {
+        System.out.println("[Pedido Comida #" + getIdPedido() + "]\n" + "- "+ accesorio + "... OK \n" + "- Direccion: " + getDireccionEntrega() + "\n" + "- Distancia: " + getDistanciaKm() + " Km\n" + "- Tiempo estimado de entrega: " + calcularTiempoEntrega(getDistanciaKm()) + " Minutos");
     }
 
     @Override
-    public void asignarRepartidor() {
-        System.out.println("[Pedido Comida] \n" + "Asignando repartidor... \n" + "-> Pedido asignado a repartidor \n");
+    public int calcularTiempoEntrega(int distanciakm) {
+        return 15 + 2 * distanciakm;
     }
 
-    public void asignarRepartidor(String nombreRepartidor) {
-        System.out.println("[Pedido " + getTipoPedido() + " id: "+ getIdPedido() + ", direccion: "+ getDireccionEntrega()+ "] \n" + "-> Verificando mochila termica... OK \n" + "-> Pedido asignado a " + nombreRepartidor + "\n");
+    public String getAccesorio() {
+        return accesorio;
+    }
+
+    public void setAccesorio(String accesorio) {
+        this.accesorio = accesorio;
     }
 }

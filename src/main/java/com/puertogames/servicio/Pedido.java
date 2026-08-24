@@ -3,22 +3,25 @@ package com.puertogames.servicio;
 public abstract class Pedido {
     private int idPedido;
     private String direccionEntrega;
-    private String tipoPedido;
+    private int distanciaKm;
 
 
-    public Pedido(int idPedido, String direccionEntrega, String tipoPedido){
+    public Pedido(int idPedido, String direccionEntrega, int distanciaKm) {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
-        this.tipoPedido = tipoPedido;
+        this.distanciaKm = distanciaKm;
+
     }
 
-    public void asignarRepartidor() {
-        System.out.println("Asignando repartidor a pedido id: " + idPedido + " " + tipoPedido + " direccion: " + direccionEntrega);
+    public void mostrarResumen() {
+        System.out.println("Pedido " + idPedido + "\n" + "Direccion: " + direccionEntrega + "\n" + "Distancia: " + distanciaKm + "\n" + "Tiempo estimado de entrega: " + calcularTiempoEntrega(distanciaKm));
     }
 
+    public abstract int calcularTiempoEntrega(int distanciakm);
 
 
-    //getters-setters
+
+    // Gettesrs - Setters
 
     public int getIdPedido() {
         return idPedido;
@@ -36,22 +39,15 @@ public abstract class Pedido {
         this.direccionEntrega = direccionEntrega;
     }
 
-    public String getTipoPedido() {
-        return tipoPedido;
+    public int getDistanciaKm() {
+        return distanciaKm;
     }
 
-    public void setTipoPedido(String tipoPedido) {
-        this.tipoPedido = tipoPedido;
+    public void setDistanciaKm(int distanciaKm) {
+        this.distanciaKm = distanciaKm;
     }
 
-    // to-string
 
-    @Override
-    public String toString() {
-        return "Pedido{" +
-                "idPedido=" + idPedido +
-                ", direccionEntrega='" + direccionEntrega + '\'' +
-                ", tipoPedido='" + tipoPedido + '\'' +
-                '}';
-    }
 }
+
+
