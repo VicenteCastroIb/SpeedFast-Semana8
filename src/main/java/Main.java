@@ -1,34 +1,45 @@
+import com.puertogames.controlador.ControladorDeEnvios;
 import com.puertogames.servicio.Pedido;
 import com.puertogames.servicio.PedidoComida;
 import com.puertogames.servicio.PedidoEncomienda;
 import com.puertogames.servicio.PedidoExpress;
 
-import java.util.ArrayList;
-
 public class Main {
     public static void main(String[] args) {
-        Pedido pedidoComida = new PedidoComida(134, "acacias 123", 13, "Mochila termica");
+
+        ControladorDeEnvios controlador = new ControladorDeEnvios();
+
+        Pedido pedidoComida = new PedidoComida(134, "Acacias 123", 13, "Mochila termica");
         Pedido pedidoEncomienda = new PedidoEncomienda(414, "Marisoles 412", 22, 8.5);
-        Pedido pedidoExpress = new PedidoExpress(82, "Acantos 12", 17, "Juan Perez (2.3 km)");
+        Pedido pedidoExpress = new PedidoExpress(82, "Acantos 12", 3, "Juan Perez (2.3 km)");
 
-        ArrayList<Pedido> listaPedidos = new ArrayList<>();
-        listaPedidos.add(pedidoComida);
-        listaPedidos.add(pedidoEncomienda);
-        listaPedidos.add(pedidoExpress);
+        System.out.println("================ RESERVA DE PEDIDOS ================\n");
+        controlador.reservarPedido(pedidoComida);
+        controlador.reservarPedido(pedidoEncomienda);
+        controlador.reservarPedido(pedidoExpress);
 
-        System.out.println("================ PEDIDOS ================ \n");
+        System.out.println("\n================ ASIGNACION DE REPARTIDORES ================\n");
+        pedidoComida.asignarRepartidor();
+        pedidoEncomienda.asignarRepartidor();
+        pedidoExpress.asignarRepartidor("Camila Rojas");
 
-        for(Pedido p : listaPedidos){
-            System.out.println("====================================");
-            p.mostrarResumen();
-        }
+        System.out.println("\n================ RESUMEN Y TIEMPOS DE ENTREGA ================\n");
+        pedidoComida.mostrarResumen();
+        System.out.println();
+        pedidoEncomienda.mostrarResumen();
+        System.out.println();
+        pedidoExpress.mostrarResumen();
 
+        System.out.println("\n================ DESPACHO DE PEDIDOS ================\n");
+        controlador.despacharPedido(pedidoComida);
+        controlador.despacharPedido(pedidoEncomienda);
 
-        System.out.println("================ CALCULAR TIEMPOS ================");
+        System.out.println("\n================ CANCELACION DE PEDIDOS ================\n");
+        controlador.cancelarPedido(pedidoExpress);
+        controlador.despacharPedido(pedidoExpress);
 
-        for (Pedido p : listaPedidos) {
-            System.out.println("- " + p.getClass().getSimpleName() + ": " + p.calcularTiempoEntrega(p.getDistanciaKm()) + " min");
-        }
+        System.out.println("\n================ HISTORIAL DE ENTREGAS ================\n");
+        controlador.verHistorial();
 
         System.out.println();
     }

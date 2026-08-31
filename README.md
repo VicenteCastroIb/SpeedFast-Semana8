@@ -1,33 +1,100 @@
 # SpeedFast
 
-Sistema de cálculo de tiempos de entrega para **SpeedFast**, una empresa de reparto a domicilio que ofrece tres tipos de servicio: comida, encomiendas y compras express.
+Sistema de gestión de pedidos y despacho para **SpeedFast**, una empresa de reparto a domicilio que ofrece tres tipos de servicio: comida, encomiendas y compras express.
 
-Proyecto desarrollado como actividad formativa de la asignatura **Desarrollo Orientado a Objetos II** (Semana 2 — Clase abstracta y jerarquía de herencia).
+Proyecto desarrollado como actividad formativa de la asignatura **Desarrollo Orientado a Objetos II** (Semana 3 — Clases abstractas, polimorfismo e interfaces).
 
 ## Descripción
 
-El sistema modela distintos tipos de pedido mediante una clase abstracta `Pedido` y tres subclases que heredan de ella, aplicando polimorfismo para calcular el tiempo estimado de entrega según el tipo de servicio y la distancia en kilómetros:
+Sobre la base construida en la semana 2 (clase abstracta `Pedido` y sus subclases), esta entrega agrega:
 
-- Comida: 15 min base + 2 min por kilómetro.
-- Encomienda: 20 min base + 1.5 min por kilómetro (redondeado a entero).
-- Express: 10 min base, +5 min extra si la distancia supera los 5 km.
+- Asignación de repartidores, automática (según el tipo de pedido) y manual.
+- Interfaces `Despachable`, `Cancelable` y `Rastreable` para desacoplar responsabilidades.
+- La clase `ControladorDeEnvios`, que coordina la reserva, el despacho, la cancelación y el historial de entregas.
 
 ## Estructura del proyecto
 
-- `src/main/java/Main.java` — Punto de entrada: instancia pedidos y demuestra el polimorfismo.
-- `src/main/java/com/puertogames/servicio/Pedido.java` — Clase base abstracta (idPedido, direccionEntrega, distanciaKm).
-- `src/main/java/com/puertogames/servicio/PedidoComida.java` — Sobrescribe `calcularTiempoEntrega()`.
-- `src/main/java/com/puertogames/servicio/PedidoEncomienda.java` — Sobrescribe `calcularTiempoEntrega()`.
-- `src/main/java/com/puertogames/servicio/PedidoExpress.java` — Sobrescribe `calcularTiempoEntrega()`.
+- `src/main/java/Main.java` — Punto de entrada: simula reserva, asignación de repartidores, despacho, cancelación e historial.
+- `src/main/java/com/puertogames/servicio/Pedido.java` — Clase base abstracta. Implementa `Despachable` y `Cancelable`.
+- `src/main/java/com/puertogames/servicio/PedidoComida.java` — Asigna repartidor según la distancia (bicicleta o moto).
+- `src/main/java/com/puertogames/servicio/PedidoEncomienda.java` — Asigna repartidor según el peso del paquete.
+- `src/main/java/com/puertogames/servicio/PedidoExpress.java` — Asigna repartidor según la zona de cercanía.
+- `src/main/java/com/puertogames/interfaces/Despachable.java` — Declara `despachar()`.
+- `src/main/java/com/puertogames/interfaces/Cancelable.java` — Declara `cancelar()`.
+- `src/main/java/com/puertogames/interfaces/Rastreable.java` — Declara `verHistorial()`.
+- `src/main/java/com/puertogames/controlador/ControladorDeEnvios.java` — Reserva pedidos, delega el despacho y la cancelación en cada `Pedido` e implementa `Rastreable` para el historial de entregas.
 
 ## Conceptos aplicados
 
-- Clase abstracta: `Pedido` define los atributos comunes (`idPedido`, `direccionEntrega`, `distanciaKm`) y el comportamiento común, implementando `mostrarResumen()` de forma reutilizable — llama a `calcularTiempoEntrega()` de forma polimórfica según el tipo real del objeto.
-- Método abstracto: `calcularTiempoEntrega()` se declara en `Pedido` sin implementación, obligando a cada subclase a definir su propia lógica.
-- Herencia: `PedidoComida`, `PedidoEncomienda` y `PedidoExpress` extienden `Pedido` y reutilizan sus atributos, constructor y `mostrarResumen()`.
-- Sobrescritura (override): cada subclase redefine `calcularTiempoEntrega()` con la fórmula correspondiente a su tipo de servicio.
-- Polimorfismo: en `Main`, los pedidos se almacenan como una lista de `Pedido` y se recorren de forma uniforme, aunque cada uno ejecuta su propia lógica de cálculo.
-- Atributos propios: cada subclase agrega un atributo propio además de los heredados — `PedidoComida.accesorio` (accesorio necesario para el reparto), `PedidoEncomienda.pesoKg` (peso del paquete) y `PedidoExpress.cercania` (repartidor asignado por cercanía).
+- Clase abstracta: `Pedido` define los atributos comunes (`idPedido`, `direccionEntrega`, `distanciaKm`, `repartidorAsignado`, `estado`) y el comportamiento reutilizable `mostrarResumen()`.
+- Métodos abstractos: `calcularTiempoEntrega()` y `asignarRepartidor()` se declaran en `Pedido` sin implementación y cada subclase los completa con su propia lógica.
+- Sobrescritura (override): `PedidoComida`, `PedidoEncomienda` y `PedidoExpress` redefinen `calcularTiempoEntrega()` y `asignarRepartidor()`, cada una con su propia regla de negocio.
+- Sobrecarga (overload): `asignarRepartidor()` automática convive con `asignarRepartidor(String nombre)` para asignación manual, implementada una sola vez en `Pedido` y reutilizada por las subclases.
+- Interfaces: `Despachable` y `Cancelable` las implementa `Pedido` y las heredan las tres subclases. `Rastreable` la implementa `ControladorDeEnvios`, que centraliza la reserva y el historial de entregas.
+- Herencia: las subclases reutilizan atributos, constructor, `mostrarResumen()`, `asignarRepartidor(String)`, `despachar()` y `cancelar()` de `Pedido`.
+
+## Diagrama de clases
+
+```mermaid
+classDiagram
+    class Pedido {
+        <<abstract>>
+        -idPedido int
+        -direccionEntrega String
+        -distanciaKm int
+        -repartidorAsignado String
+        -estado String
+        +mostrarResumen()
+        +calcularTiempoEntrega(distanciakm)*
+        +asignarRepartidor()*
+        +asignarRepartidor(nombre)
+        +despachar()
+        +cancelar()
+    }
+    class PedidoComida {
+        -accesorio String
+        +calcularTiempoEntrega(distanciakm)
+        +asignarRepartidor()
+    }
+    class PedidoEncomienda {
+        -pesoKg double
+        +calcularTiempoEntrega(distanciaKm)
+        +asignarRepartidor()
+    }
+    class PedidoExpress {
+        -cercania String
+        +calcularTiempoEntrega(distanciaKm)
+        +asignarRepartidor()
+    }
+    class Despachable {
+        <<interface>>
+        despachar()
+    }
+    class Cancelable {
+        <<interface>>
+        cancelar()
+    }
+    class Rastreable {
+        <<interface>>
+        verHistorial()
+    }
+    class ControladorDeEnvios {
+        -pedidosReservados ArrayList
+        -historialEntregas ArrayList
+        +reservarPedido(pedido)
+        +despacharPedido(pedido)
+        +cancelarPedido(pedido)
+        +verHistorial()
+    }
+
+    Pedido <|-- PedidoComida
+    Pedido <|-- PedidoEncomienda
+    Pedido <|-- PedidoExpress
+    Pedido ..|> Despachable
+    Pedido ..|> Cancelable
+    ControladorDeEnvios ..|> Rastreable
+    ControladorDeEnvios --> Pedido
+```
 
 ## Requisitos
 
@@ -48,7 +115,7 @@ java -cp out Main
 
 ## Salida esperada (resumen)
 
-El programa crea un pedido de cada tipo (Comida, Encomienda, Express), imprime el resumen de cada uno con su dirección, distancia y tiempo estimado de entrega calculado según la fórmula propia de cada subclase.
+El programa reserva un pedido de cada tipo (Comida, Encomienda, Express), asigna repartidor de forma automática a dos de ellos y de forma manual al tercero, muestra el resumen y el tiempo estimado de cada uno, despacha dos pedidos, cancela el pedido restante y finalmente imprime el historial de entregas realizadas.
 
 ## Autor
 

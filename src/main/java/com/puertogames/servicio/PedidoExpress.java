@@ -11,7 +11,7 @@ public class PedidoExpress extends Pedido{
     }
 
     public void mostrarResumen() {
-        System.out.println("[Pedido Express #" + getIdPedido() + "]\n" + "- Repartidor asignado: " + cercania + "\n" + "- Direccion: " + getDireccionEntrega() + "\n" + "- Distancia: " + getDistanciaKm() + " Km\n" + "- Tiempo estimado de entrega: " + calcularTiempoEntrega(getDistanciaKm()) + " minutos");
+        System.out.println("[Pedido Express #" + getIdPedido() + "]\n" + "- Zona de cercania: " + cercania + "\n" + "- Direccion: " + getDireccionEntrega() + "\n" + "- Distancia: " + getDistanciaKm() + " Km\n" + "- Repartidor: " + (getRepartidorAsignado() == null ? "sin asignar" : getRepartidorAsignado()) + "\n" + "- Estado: " + getEstado() + "\n" + "- Tiempo estimado de entrega: " + calcularTiempoEntrega(getDistanciaKm()) + " minutos");
     }
 
     @Override
@@ -25,6 +25,12 @@ public class PedidoExpress extends Pedido{
         }
 
 
+    }
+
+    @Override
+    public void asignarRepartidor() {
+        setRepartidorAsignado(cercania);
+        System.out.println("Asignacion automatica pedido " + getIdPedido() + " (Express): " + cercania);
     }
 
     public String getCercania() {

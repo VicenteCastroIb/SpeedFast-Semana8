@@ -1,15 +1,22 @@
 package com.puertogames.servicio;
 
-public abstract class Pedido {
+import com.puertogames.interfaces.Cancelable;
+import com.puertogames.interfaces.Despachable;
+
+public abstract class Pedido implements Despachable, Cancelable {
     private int idPedido;
     private String direccionEntrega;
     private int distanciaKm;
+    private String repartidorAsignado;
+    private String estado;
 
 
     public Pedido(int idPedido, String direccionEntrega, int distanciaKm) {
         this.idPedido = idPedido;
         this.direccionEntrega = direccionEntrega;
         this.distanciaKm = distanciaKm;
+        this.repartidorAsignado = null;
+        this.estado = "Pendiente";
 
     }
 
@@ -19,9 +26,39 @@ public abstract class Pedido {
 
     public abstract int calcularTiempoEntrega(int distanciakm);
 
+    public abstract void asignarRepartidor();
+
+    public void asignarRepartidor(String nombre) {
+        this.repartidorAsignado = nombre;
+        System.out.println("Repartidor asignado manualmente al pedido " + idPedido + ": " + nombre);
+    }
+
+    @Override
+    public void despachar() {
+        if (repartidorAsignado == null) {
+            System.out.println("No se puede despachar el pedido " + idPedido + ": falta asignar un repartidor.");
+            return;
+        }
+        if (estado.equals("Cancelado")) {
+            System.out.println("No se puede despachar el pedido " + idPedido + ": el pedido fue cancelado.");
+            return;
+        }
+        estado = "Despachado";
+        System.out.println("Pedido " + idPedido + " despachado con " + repartidorAsignado + ". Tiempo estimado: " + calcularTiempoEntrega(distanciaKm) + " min.");
+    }
+
+    @Override
+    public void cancelar() {
+        if (estado.equals("Despachado")) {
+            System.out.println("No se puede cancelar el pedido " + idPedido + ": ya fue despachado.");
+            return;
+        }
+        estado = "Cancelado";
+        System.out.println("Pedido " + idPedido + " cancelado.");
+    }
 
 
-    // Gettesrs - Setters
+    // Getters - Setters
 
     public int getIdPedido() {
         return idPedido;
@@ -47,7 +84,16 @@ public abstract class Pedido {
         this.distanciaKm = distanciaKm;
     }
 
+    public String getRepartidorAsignado() {
+        return repartidorAsignado;
+    }
+
+    protected void setRepartidorAsignado(String repartidorAsignado) {
+        this.repartidorAsignado = repartidorAsignado;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
 
 }
-
-
