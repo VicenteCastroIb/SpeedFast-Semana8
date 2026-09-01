@@ -10,6 +10,7 @@ public class PedidoExpress extends Pedido{
         this.cercania = cercania;
     }
 
+    @Override
     public void mostrarResumen() {
         System.out.println("[Pedido Express #" + getIdPedido() + "]\n" + "- Zona de cercania: " + cercania + "\n" + "- Direccion: " + getDireccionEntrega() + "\n" + "- Distancia: " + getDistanciaKm() + " Km\n" + "- Repartidor: " + (getRepartidorAsignado() == null ? "sin asignar" : getRepartidorAsignado()) + "\n" + "- Estado: " + getEstado() + "\n" + "- Tiempo estimado de entrega: " + calcularTiempoEntrega(getDistanciaKm()) + " minutos");
     }
@@ -29,6 +30,7 @@ public class PedidoExpress extends Pedido{
 
     @Override
     public void asignarRepartidor() {
+        // en express ya se sabe quien esta mas cerca, no hay que calcular nada
         setRepartidorAsignado(cercania);
         System.out.println("Asignacion automatica pedido " + getIdPedido() + " (Express): " + cercania);
     }

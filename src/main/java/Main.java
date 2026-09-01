@@ -21,7 +21,7 @@ public class Main {
         System.out.println("\n================ ASIGNACION DE REPARTIDORES ================\n");
         pedidoComida.asignarRepartidor();
         pedidoEncomienda.asignarRepartidor();
-        pedidoExpress.asignarRepartidor("Camila Rojas");
+        pedidoExpress.asignarRepartidor("Camila Rojas"); // este lo pidio el cliente a mano
 
         System.out.println("\n================ RESUMEN Y TIEMPOS DE ENTREGA ================\n");
         pedidoComida.mostrarResumen();
@@ -35,8 +35,8 @@ public class Main {
         controlador.despacharPedido(pedidoEncomienda);
 
         System.out.println("\n================ CANCELACION DE PEDIDOS ================\n");
-        controlador.cancelarPedido(pedidoExpress);
-        controlador.despacharPedido(pedidoExpress);
+        controlador.cancelarPedido(pedidoExpress, "el cliente ya no lo necesita");
+        controlador.despacharPedido(pedidoExpress); // no deberia poder despachar, ya esta cancelado
 
         System.out.println("\n================ HISTORIAL DE ENTREGAS ================\n");
         controlador.verHistorial();

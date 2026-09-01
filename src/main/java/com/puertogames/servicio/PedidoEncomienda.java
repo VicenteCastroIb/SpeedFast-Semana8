@@ -9,6 +9,7 @@ public class PedidoEncomienda extends Pedido{
         this.pesoKg = pesoKg;
     }
 
+    @Override
     public void mostrarResumen() {
         System.out.println("[Pedido Encomienda #" + getIdPedido() + "]\n" + "- Peso: " + pesoKg + " Kg\n" + "- Direccion: " + getDireccionEntrega() + "\n" + "- Distancia: " + getDistanciaKm() + " Km\n" + "- Repartidor: " + (getRepartidorAsignado() == null ? "sin asignar" : getRepartidorAsignado()) + "\n" + "- Estado: " + getEstado() + "\n" + "- Tiempo estimado de entrega: " + calcularTiempoEntrega(getDistanciaKm()) + " minutos");
     }
@@ -20,6 +21,7 @@ public class PedidoEncomienda extends Pedido{
 
     @Override
     public void asignarRepartidor() {
+        // los paquetes pesados necesitan camioneta, los livianos van en furgon
         String repartidor;
         if (pesoKg > 10) {
             repartidor = "Repartidor con camioneta de carga";

@@ -35,8 +35,17 @@ public class ControladorDeEnvios implements Rastreable {
         }
     }
 
+    // igual que cancelarPedido pero guardando el motivo que dio el cliente
+    public void cancelarPedido(Pedido pedido, String motivo) {
+        pedido.cancelar(motivo);
+        if (pedido.getEstado().equals("Cancelado")) {
+            pedidosReservados.remove(pedido);
+        }
+    }
+
     @Override
     public void verHistorial() {
+        // aca solo quedan los pedidos que ya se despacharon
         if (historialEntregas.isEmpty()) {
             System.out.println("Todavia no hay pedidos despachados.");
             return;

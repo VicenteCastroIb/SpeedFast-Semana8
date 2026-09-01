@@ -28,6 +28,7 @@ public abstract class Pedido implements Despachable, Cancelable {
 
     public abstract void asignarRepartidor();
 
+    // para cuando el cliente pide un repartidor en especifico
     public void asignarRepartidor(String nombre) {
         this.repartidorAsignado = nombre;
         System.out.println("Repartidor asignado manualmente al pedido " + idPedido + ": " + nombre);
@@ -55,6 +56,14 @@ public abstract class Pedido implements Despachable, Cancelable {
         }
         estado = "Cancelado";
         System.out.println("Pedido " + idPedido + " cancelado.");
+    }
+
+    // por si el cliente quiere dejar un motivo al cancelar
+    public void cancelar(String motivo) {
+        cancelar();
+        if (estado.equals("Cancelado")) {
+            System.out.println("Motivo: " + motivo);
+        }
     }
 
 
