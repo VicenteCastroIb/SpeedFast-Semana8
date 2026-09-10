@@ -2,10 +2,11 @@ package com.puertogames.semana5;
 
 import java.util.Random;
 
+// cada Repartidor corre en su propio hilo
 public class Repartidor implements Runnable {
 
     private String nombre;
-    private ZonaDeCarga zonaDeCarga;
+    private ZonaDeCarga zonaDeCarga; // esta referencia es la msima para los 3 repartidores
     private final Random random = new Random();
 
     public Repartidor(String nombre, ZonaDeCarga zonaDeCarga){
@@ -15,11 +16,12 @@ public class Repartidor implements Runnable {
 
     @Override
     public void run() {
+        // sigue pidiendo pedidos hasta que la zona de carga se quede sin nada
         while(true) {
             Pedido pedido = zonaDeCarga.retirarPedido();
 
             if (pedido == null) {
-                break;
+                break; // ya no hay mas pedidos, se corta el while
             }
 
             System.out.println("[Repartidor - " + nombre + "] Retirando pedido #" + pedido.getId() + "...");
@@ -28,6 +30,7 @@ public class Repartidor implements Runnable {
             System.out.println("[Repartidor - " + nombre + "] Entregando pedido #" + pedido.getId() + "...");
 
             try {
+                // simulo el tiempo que se demoraria en llegar (entre 1 y 3 segundos)
                 int demoraEntrega = 1000 + random.nextInt(2000);
                 Thread.sleep(demoraEntrega);
             } catch (InterruptedException e) {
