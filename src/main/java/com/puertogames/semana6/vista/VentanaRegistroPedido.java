@@ -9,11 +9,9 @@ import javax.swing.table.DefaultTableModel;
 
 public class VentanaRegistroPedido extends JFrame {
     private JPanel jpVentanaRegistro;
-    private JSpinner spinner1;
     private JTextField textField1;
     private JComboBox<TipoPedido> comboBox1;
     private JButton btnGuardar;
-    private JLabel lblId;
     private JLabel lblDireccion;
     private JLabel lblTipo;
     private JLabel lblTitulo;
@@ -29,7 +27,6 @@ public class VentanaRegistroPedido extends JFrame {
         setContentPane(jpVentanaRegistro);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        spinner1.setModel(new SpinnerNumberModel(1,1,99999,1));
 
         // Cargo combobox
         for (TipoPedido tipo : TipoPedido.values()) {
@@ -46,33 +43,23 @@ public class VentanaRegistroPedido extends JFrame {
 
     public void guardarPedido() {
         String direccion = textField1.getText().trim();
-        if(direccion.isEmpty()){
-            JOptionPane.showMessageDialog(this, "La direccion no puede estar vacia.", "Datos invalids", JOptionPane.WARNING_MESSAGE);
+        if (direccion.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La direccion no puede estar vacia.", "Datos invalidos", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        int id = (int) spinner1.getValue();
         TipoPedido tipoPedido = (TipoPedido) comboBox1.getSelectedItem();
 
-        // Valido, ya q no setie autoincremento en id
-        for (Pedido p : controladorPedido.getPedidos()) {
-            if (p.getId() == id){
-                JOptionPane.showMessageDialog(this, "ID: " + id + " ya existente", "Datos invalidos", JOptionPane.WARNING_MESSAGE );
-            return;
-            }
-        }
-        // Creo pedidos con datos extraidos
-        Pedido pedido = new Pedido(id, direccion, tipoPedido);
+        // Pedido nuevo: sin id (lo asigna MySQL) y con estado PENDIENTE
+        Pedido pedido = new Pedido(direccion, tipoPedido);
         controladorPedido.agregarPedido(pedido, model);
-        JOptionPane.showMessageDialog(this, "Pedido Creado Correctamente", "Exitazo", JOptionPane.INFORMATION_MESSAGE);
 
-        // Limpio form
+        JOptionPane.showMessageDialog(this, "Pedido guardado en la base de datos", "Exitazo", JOptionPane.INFORMATION_MESSAGE);
         limpiarFormulario();
     }
 
-    public void limpiarFormulario(){
+    public void limpiarFormulario() {
         textField1.setText("");
-        spinner1.setValue(1);
         comboBox1.setSelectedIndex(0);
         dispose();
     }

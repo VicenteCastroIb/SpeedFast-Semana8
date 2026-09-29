@@ -2,6 +2,8 @@ package com.puertogames.semana6.vista;
 
 import com.puertogames.semana6.controlador.ControladorPedido;
 import com.puertogames.semana6.controlador.ControladorRepartidor;
+import com.puertogames.semana6.dao.EntregaDAO;
+import com.puertogames.semana6.modelo.Entrega;
 import com.puertogames.semana6.modelo.Pedido;
 import com.puertogames.semana6.modelo.Repartidor;
 
@@ -69,8 +71,7 @@ public class VentanaAsignarRepartidor extends JFrame {
             return;
         }
 
-        int index = controladorPedido.getPedidos().indexOf(pedidoSeleccionado);
-        controladorPedido.asignarRepartidor(index, repartidorSeleccionado, modeloPedidos);
+        new EntregaDAO().guardar(new Entrega(pedidoSeleccionado, repartidorSeleccionado));
 
         JOptionPane.showMessageDialog(this,
                 "Pedido #" + pedidoSeleccionado.getId() + " asignado a " + repartidorSeleccionado.getNombre(),

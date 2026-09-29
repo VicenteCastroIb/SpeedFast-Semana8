@@ -1,51 +1,60 @@
-# SpeedFast — Semana 6: Interfaz gráfica para gestión de entregas
+# SpeedFast — Semana 7: Conectando aplicaciones Java con bases de datos mediante JDBC
 
-Actividad formativa individual de la asignatura **Desarrollo Orientado a Objetos II**, Semana 6.
+Actividad formativa individual de la asignatura **Desarrollo Orientado a Objetos II**, Semana 7.
 
-## Caso: interfaz gráfica para gestión de entregas en SpeedFast
+## Caso: persistencia de pedidos en SpeedFast
 
-En las semanas anteriores se modeló para SpeedFast la gestión de pedidos y la ejecución de entregas. En esta entrega, la empresa necesita una **interfaz gráfica de escritorio** (Java Swing) que permita a los usuarios registrar nuevos pedidos, visualizar los pedidos existentes en una tabla y asignar repartidores para simular el inicio de las entregas.
-
-La aplicación se construye con Java Swing siguiendo una organización por capas (modelo, vista, controlador) y almacena los datos en listas en memoria compartidas mediante controladores.
-
-## Estructura del proyecto
-
-El código se organiza en el paquete `com.puertogames.semana6`, separado en:
-
-- **modelo** — clases de datos:
-  - `Pedido` — id, dirección, tipo de pedido (`TipoPedido`) y repartidor asignado.
-  - `TipoPedido` — enum con los tipos disponibles: `COMIDA`, `ENCOMIENDA`, `EXPRESS`.
-  - `Repartidor` — nombre del repartidor.
-- **controlador** — lógica de negocio y datos en memoria:
-  - `ControladorPedido` — mantiene la lista de pedidos, los agrega a la tabla (`DefaultTableModel`) y asigna repartidores.
-  - `ControladorRepartidor` — precarga la lista de repartidores disponibles.
-- **vista** — interfaces gráficas (Swing / GUI Designer de IntelliJ):
-  - `VentanaPrincipal` — ventana inicial (JFrame) con botones para Registrar Pedido, Listar Pedidos y Asignar Repartidor.
-  - `VentanaRegistroPedido` — formulario con ID (JSpinner), Dirección (JTextField) y Tipo (JComboBox), con validación y botón Guardar.
-  - `VentanaListaPedidos` — muestra los pedidos en un JTable usando el `DefaultTableModel` compartido.
-  - `VentanaAsignarRepartidor` — permite seleccionar un pedido y un repartidor y confirmar la asignación.
-- **main** — punto de entrada:
-  - `Main` — inicia la aplicación abriendo `VentanaPrincipal` en el hilo de eventos de Swing.
-
-## Funcionalidades
-
-- **Registrar pedido:** valida que la dirección no esté vacía y que el ID no esté duplicado antes de agregarlo a la lista en memoria. Muestra confirmación con `JOptionPane`.
-- **Listar pedidos:** visualiza todos los pedidos en un `JTable` (ID, Dirección, Tipo, Repartidor), reflejando la información actualizada mediante `DefaultTableModel`.
-- **Asignar repartidor:** selecciona un pedido y un repartidor desde combos y actualiza la tabla con la asignación.
-- **Navegación:** todas las ventanas se abren desde `VentanaPrincipal` y comparten el mismo controlador y modelo de tabla, manteniendo los datos consistentes.
+La aplicación de escritorio (Java Swing) construida en la semana 6 ahora **guarda y consulta la información en una base de datos MySQL** mediante JDBC. Los pedidos, repartidores y entregas se registran desde los formularios y se mantienen aunque se cierre la aplicación.
 
 ## Requisitos
 
-- JDK 21 (o superior)
-- IntelliJ IDEA
-- Maven (opcional)
+- JDK 21 o superior
+- IntelliJ IDEA (el proyecto usa formularios del GUI Designer de IntelliJ)
+- MySQL Server 8.4 y MySQL Workbench
+- Maven (incluido en IntelliJ). El driver se descarga automáticamente:
+  `com.mysql:mysql-connector-j:8.4.0`
 
 ## Cómo ejecutar
 
-Desde IntelliJ IDEA: abrir el proyecto y ejecutar la clase `com.puertogames.semana6.main.Main`.
+1. **Crear la base de datos:** abrir `database/speedfast_db.sql` en MySQL Workbench y ejecutarlo completo. Crea `speedfast_db`, las tablas `repartidor`, `pedido` y `entrega` (con sus claves foráneas) y carga datos de prueba.
+2. **Configurar la conexión:** en `src/main/java/com/puertogames/semana6/dao/ConexionBD.java` ajustar el usuario y la contraseña de MySQL:
+   ```java
+   private static final String URL = "jdbc:mysql://localhost:3306/speedfast_db";
+   private static final String USER = "root";
+   private static final String PASSWORD = "tu_contraseña";
+   ```
+3. **Probar la conexión (opcional):** ejecutar `main/PruebaConexion`. Debe imprimir "Conexion exitosa".
+4. **Ejecutar la aplicación:** ejecutar `main/Main`.
 
-> Nota: las ventanas se diseñaron con el GUI Designer de IntelliJ (archivos `.form`), por lo que la aplicación debe ejecutarse desde IntelliJ IDEA para que los formularios se instrumenten correctamente.
+## Modelo de base de datos
 
-## Autor
+| Tabla | Columnas | Relación |
+|---|---|---|
+| `repartidor` | id (PK, AUTO_INCREMENT), nombre | Un repartidor puede realizar muchas entregas |
+| `pedido` | id (PK, AUTO_INCREMENT), direccion, tipo, estado | Un pedido puede tener una o varias entregas |
+| `entrega` | id (PK), id_pedido (FK), id_repartidor (FK), fecha, hora | Cada entrega se asocia a un pedido y a un repartidor |
 
-Vicente Castro
+## Estructura del proyecto (`com.puertogames.semana6`)
+
+- **dao** — acceso a datos con JDBC:
+  - `ConexionBD` — gestiona la conexión con `DriverManager` (`conectar()` y `cerrar()`).
+  - `PedidoDAO` — `guardar(Pedido)` con `PreparedStatement` y `listarTodos()` con `ResultSet`.
+  - `RepartidorDAO` — `listarTodos()` devuelve una `List<Repartidor>` usando `ResultSet`, y `guardar(Repartidor)`.
+  - `EntregaDAO` — `guardar(Entrega)` registra la relación entre pedido y repartidor con fecha y hora.
+- **modelo** — `Pedido`, `Repartidor`, `Entrega`, y los enums `TipoPedido` y `EstadoPedido`.
+- **controlador** — `ControladorPedido` y `ControladorRepartidor`: conectan las vistas con los DAO.
+- **vista** — ventanas Swing:
+  - `VentanaPrincipal` — menú con Registrar Pedido, Listar Pedidos, Asignar Repartidor y Registrar Repartidor.
+  - `VentanaRegistroPedido` — registra un pedido en la BD (el ID lo asigna MySQL).
+  - `VentanaListaPedidos` — muestra los pedidos almacenados en un `JTable` (ID, Dirección, Tipo, Estado, Repartidor).
+  - `VentanaAsignarRepartidor` — elige un pedido y un repartidor desde la BD y registra una entrega.
+  - `VentanaRegistroRepartidor` — registra un repartidor en la BD.
+- **main** — `Main` (inicia la app) y `PruebaConexion` (prueba JDBC con `try-catch-finally`).
+
+## Buenas prácticas aplicadas
+
+- `PreparedStatement` con parámetros `?` en todas las consultas (previene inyección SQL).
+- Cierre de recursos con `try-with-resources` en los DAO y `try-catch-finally` en la prueba de conexión.
+- Manejo de `SQLException` con mensaje en consola (`printStackTrace`) y aviso al usuario (`JOptionPane`).
+- Enums guardados con `name()` y leídos con `valueOf()` para mantener consistencia con la BD.
+- Separación en capas: vista → controlador → DAO → MySQL.

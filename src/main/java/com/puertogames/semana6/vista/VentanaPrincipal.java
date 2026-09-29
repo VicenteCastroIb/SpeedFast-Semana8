@@ -11,13 +11,14 @@ public class VentanaPrincipal extends JFrame {
     private JButton btnRegistrar;
     private JButton btnListar;
     private JButton btnAsignar;
+    private JButton btnRegistrarRepartidor;
     private JLabel lblTitulo;
 
-    // Únicas instancias para toda la app: se crean una sola vez acá
+    // unicas instancias se crean aca
     private final ControladorPedido controladorPedido = new ControladorPedido();
     private final ControladorRepartidor controladorRepartidor = new ControladorRepartidor();
     private final DefaultTableModel modeloPedidos =
-            new DefaultTableModel(new Object[]{"ID", "Dirección", "Tipo", "Repartidor"}, 0);
+            new DefaultTableModel(new Object[]{"ID", "Dirección", "Tipo", "Estado", "Repartidor"}, 0);
 
     public VentanaPrincipal() {
         setTitle("Ventana Principal SpeedFast");
@@ -30,10 +31,15 @@ public class VentanaPrincipal extends JFrame {
         btnRegistrar.addActionListener(e ->
                 new VentanaRegistroPedido(controladorPedido, modeloPedidos).setVisible(true));
 
-        btnListar.addActionListener(e ->
-                new VentanaListaPedidos(modeloPedidos).setVisible(true));
+        btnListar.addActionListener(e -> {
+            controladorPedido.cargarPedidosDesdeBD(modeloPedidos);   // primero trae datos de la bd
+            new VentanaListaPedidos(modeloPedidos).setVisible(true);
+        });
 
         btnAsignar.addActionListener(e ->
                 new VentanaAsignarRepartidor(controladorPedido, controladorRepartidor, modeloPedidos).setVisible(true));
+
+        btnRegistrarRepartidor.addActionListener(e ->
+                new VentanaRegistroRepartidor(controladorRepartidor).setVisible(true));
     }
 }
