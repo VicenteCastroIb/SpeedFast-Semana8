@@ -39,3 +39,5 @@ build/
 .DS_Store
 ### Semanas anteriores (no forman parte de esta entrega) ###
 semana 4/
+
+*.zip
