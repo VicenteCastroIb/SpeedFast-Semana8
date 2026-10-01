@@ -23,6 +23,6 @@ public class Repartidor {
     // toString
     @Override
     public String toString() {
-        return  nombre;
+        return  id + " - " +  nombre;
     }
 }

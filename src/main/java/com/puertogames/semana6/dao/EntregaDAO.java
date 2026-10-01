@@ -2,26 +2,28 @@ package com.puertogames.semana6.dao;
 
 import com.puertogames.semana6.modelo.Entrega;
 
-import javax.swing.*;
-import java.sql.*;
+import java.sql.SQLException;
+import java.util.List;
 
-public class EntregaDAO {
+// Operaciones CRUD para entidad Entrega
+public interface EntregaDAO {
 
-    public void guardar(Entrega entrega) {
-        String sql = "INSERT INTO entrega (id_pedido, id_repartidor, fecha, hora) VALUES (?, ?, ?, ?)";
+    // Inserta una Entrega nueva
+    void create(Entrega entrega) throws SQLException;
 
-        try (Connection conn = ConexionBD.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    // Retorno lista de todas las Entregas
+    List<Entrega> readAll() throws SQLException;
 
-            ps.setInt(1, entrega.getPedido().getId());
-            ps.setInt(2, entrega.getRepartidor().getId());
-            ps.setDate(3, Date.valueOf(entrega.getFecha()));
-            ps.setTime(4, Time.valueOf(entrega.getHora()));
-            ps.executeUpdate();
+    // Retorno las Entregas asociadas a un Pedido
+    List<Entrega> readByPedido(int idPedido) throws SQLException;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error al guardar la entrega en la base de datos.");
-        }
-    }
+    // Retorno las Entregas realizadas por un Repartidor
+    List<Entrega> readByRepartidor(int idRepartidor) throws SQLException;
+
+    // Actualizo objeto Entrega
+    void update(Entrega entrega) throws SQLException;
+
+    // Borro objeto Entrega
+    void delete(int id) throws SQLException;
+
 }

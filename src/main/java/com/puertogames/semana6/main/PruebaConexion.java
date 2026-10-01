@@ -1,6 +1,6 @@
 package com.puertogames.semana6.main;
 
-import com.puertogames.semana6.dao.ConexionBD;
+import com.puertogames.semana6.util.ConexionBD;
 
 import java.sql.Connection;
 import java.sql.SQLException;

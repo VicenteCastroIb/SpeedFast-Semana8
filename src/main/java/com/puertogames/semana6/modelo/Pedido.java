@@ -15,6 +15,12 @@ public class Pedido {
     }
 
     // Pedido desde la bd
+    public Pedido(String direccion, TipoPedido tipoPedido, EstadoPedido estado) {
+        this.direccion = direccion;
+        this.tipoPedido = tipoPedido;
+        this.estado = estado;
+    }
+
     public Pedido(int id, String direccion, TipoPedido tipoPedido, EstadoPedido estado) {
         this.id = id;
         this.direccion = direccion;
@@ -41,6 +47,6 @@ public class Pedido {
 
     @Override
     public String toString() {
-        return "Pedido #" + id + " | " + direccion + " | " + tipoPedido + " | " + estado;
+        return id + " - " + direccion;
     }
 }
