@@ -4,11 +4,11 @@ import com.puertogames.semana6.vista.VentanaPrincipal;
 
 import javax.swing.SwingUtilities;
 
+
+// Punto de entrada de la aplicación SpeedFast.
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
-            ventanaPrincipal.setVisible(true);
-        });
+        // Abre la ventana principal en el hilo de eventos de Swing
+        SwingUtilities.invokeLater(() -> new VentanaPrincipal().setVisible(true));
     }
 }

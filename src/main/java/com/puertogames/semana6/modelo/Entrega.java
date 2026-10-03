@@ -3,6 +3,7 @@ package com.puertogames.semana6.modelo;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+// Entrega: asocia un pedido con un repartidor en una fecha y hora
 public class Entrega {
     private int id;
     private Pedido pedido;

@@ -22,6 +22,7 @@ public class RepartidorDAOImpl implements RepartidorDAO{
 
     private static final Logger LOGGER = Logger.getLogger(RepartidorDAOImpl.class.getName());
 
+    // Inserta un repartidor nuevo
     @Override
     public void create(Repartidor repartidor) throws SQLException {
         String sql = "INSERT INTO repartidores (nombre) VALUES (?)";
@@ -34,6 +35,7 @@ public class RepartidorDAOImpl implements RepartidorDAO{
         }
     }
 
+    // Retorna todos los repartidores
     @Override
     public List<Repartidor> readAll() throws SQLException {
         List<Repartidor> listaRepartidores = new ArrayList<>();
@@ -49,6 +51,7 @@ public class RepartidorDAOImpl implements RepartidorDAO{
         return listaRepartidores;
     }
 
+    // Actualiza el nombre de un repartidor según su id
     @Override
     public void update(Repartidor repartidor) throws SQLException {
         String sql = "UPDATE repartidores SET nombre=? WHERE id=?";
@@ -62,6 +65,7 @@ public class RepartidorDAOImpl implements RepartidorDAO{
         }
     }
 
+    // Elimina el repartidor con el id indicado
     @Override
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM repartidores WHERE id=?";

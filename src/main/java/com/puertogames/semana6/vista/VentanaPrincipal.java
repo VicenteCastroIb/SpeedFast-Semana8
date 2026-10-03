@@ -1,45 +1,54 @@
 package com.puertogames.semana6.vista;
 
-import com.puertogames.semana6.controlador.ControladorPedido;
-import com.puertogames.semana6.controlador.ControladorRepartidor;
-
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+
+
+// Ventana principal de SpeedFast, menú desde el que se abren
+// las gestiones de repartidores, pedidos y entregas.
 
 public class VentanaPrincipal extends JFrame {
-    private JPanel jpVentanaPrincipal;
-    private JButton btnRegistrar;
-    private JButton btnListar;
-    private JButton btnAsignar;
-    private JButton btnRegistrarRepartidor;
-    private JLabel lblTitulo;
 
-    // unicas instancias se crean aca
-    private final ControladorPedido controladorPedido = new ControladorPedido();
-    private final ControladorRepartidor controladorRepartidor = new ControladorRepartidor();
-    private final DefaultTableModel modeloPedidos =
-            new DefaultTableModel(new Object[]{"ID", "Dirección", "Tipo", "Estado", "Repartidor"}, 0);
+    // Componentes de la ventana
+    private final JButton btnRepartidores = new JButton("Gestión de Repartidores");
+    private final JButton btnPedidos = new JButton("Gestión de Pedidos");
+    private final JButton btnEntregas = new JButton("Gestión de Entregas");
 
+    // Constructor para configurar ventana
     public VentanaPrincipal() {
-        setTitle("Ventana Principal SpeedFast");
-        setContentPane(jpVentanaPrincipal);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        pack();
+        setTitle("SpeedFast - Menú principal");
+        setSize(350, 260);
         setLocationRelativeTo(null);
-        setResizable(false);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);   // al cerrar esta ventana termina la aplicación
 
-        btnRegistrar.addActionListener(e ->
-                new VentanaRegistroPedido(controladorPedido, modeloPedidos).setVisible(true));
+        armarVentana();
+        inicializarBotones();
+    }
 
-        btnListar.addActionListener(e -> {
-            controladorPedido.cargarPedidosDesdeBD(modeloPedidos);   // primero trae datos de la bd
-            new VentanaListaPedidos(modeloPedidos).setVisible(true);
-        });
+    // Ubico componentes
+    private void armarVentana() {
+        // Zona superior título
+        JLabel lblTitulo = new JLabel("SpeedFast", SwingConstants.CENTER);
+        lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 22));
+        lblTitulo.setBorder(BorderFactory.createEmptyBorder(15, 10, 5, 10));
 
-        btnAsignar.addActionListener(e ->
-                new VentanaAsignarRepartidor(controladorPedido, controladorRepartidor, modeloPedidos).setVisible(true));
+        // Zona central un botón por cada gestión
+        JPanel panelBotones = new JPanel(new GridLayout(3, 1, 10, 10));
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
+        panelBotones.add(btnRepartidores);
+        panelBotones.add(btnPedidos);
+        panelBotones.add(btnEntregas);
 
-        btnRegistrarRepartidor.addActionListener(e ->
-                new VentanaRegistroRepartidor(controladorRepartidor).setVisible(true));
+        // Ubico zonas
+        setLayout(new BorderLayout());
+        add(lblTitulo, BorderLayout.NORTH);
+        add(panelBotones, BorderLayout.CENTER);
+    }
+
+    // Cada botón abre una ventana nueva de la gestión correspondiente
+    private void inicializarBotones() {
+        btnRepartidores.addActionListener(e -> new GestionRepartidores().setVisible(true));
+        btnPedidos.addActionListener(e -> new GestionPedidos().setVisible(true));
+        btnEntregas.addActionListener(e -> new GestionEntregas().setVisible(true));
     }
 }

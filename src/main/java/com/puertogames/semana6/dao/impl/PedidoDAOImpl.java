@@ -15,10 +15,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Implementación JDBC de PedidoDAO.
+ * Ejecuta las operaciones CRUD sobre la tabla pedidos.
+ */
 public class PedidoDAOImpl implements PedidoDAO {
 
     private static final Logger LOGGER = Logger.getLogger(PedidoDAOImpl.class.getName());
 
+    // Inserta un pedido nuevo
     @Override
     public void create(Pedido pedido) throws SQLException {
         String sql = "INSERT INTO pedidos (direccion, tipo, estado) VALUES (?, ?, ?)";
@@ -33,6 +38,7 @@ public class PedidoDAOImpl implements PedidoDAO {
         }
     }
 
+    // Retorna todos los pedidos
     @Override
     public List<Pedido> readAll() throws SQLException {
         List<Pedido> listaPedidos = new ArrayList<>();
@@ -48,6 +54,7 @@ public class PedidoDAOImpl implements PedidoDAO {
         return listaPedidos;
     }
 
+    // Retorna los pedidos con el estado indicado
     @Override
     public List<Pedido> readByEstado(EstadoPedido estadoPedido) throws SQLException {
         List<Pedido> listaPedidosPorEstado = new ArrayList<>();
@@ -67,6 +74,7 @@ public class PedidoDAOImpl implements PedidoDAO {
         return listaPedidosPorEstado;
     }
 
+    // Retorna los pedidos del tipo indicado
     @Override
     public List<Pedido> readByTipo(TipoPedido tipoPedido) throws SQLException {
         List<Pedido> listaPedidosPorTipo = new ArrayList<>();
@@ -86,6 +94,7 @@ public class PedidoDAOImpl implements PedidoDAO {
         return listaPedidosPorTipo;
     }
 
+    // Actualiza los datos de un pedido según su id
     @Override
     public void update(Pedido pedido) throws SQLException {
         String sql = "UPDATE pedidos SET direccion=?, tipo=?, estado=? WHERE id=?";
@@ -101,6 +110,7 @@ public class PedidoDAOImpl implements PedidoDAO {
         }
     }
 
+    // Elimina el pedido con el id indicado
     @Override
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM pedidos WHERE id=?";

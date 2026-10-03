@@ -78,6 +78,7 @@ public class ControladorRepartidor {
         }
     }
 
+    // Valido que se haya seleccionado un repartidor
     private void validarId(int id) {
         if (id <= 0) {
             throw new IllegalArgumentException("Debes seleccionar un repartidor de la tabla.");

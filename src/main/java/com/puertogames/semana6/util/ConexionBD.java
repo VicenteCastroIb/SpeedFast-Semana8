@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+// Entrega la conexión a la base de datos MySQL de SpeedFast
 public class ConexionBD {
 
     private static final String URL = "jdbc:mysql://localhost:3306/speedfast_db";

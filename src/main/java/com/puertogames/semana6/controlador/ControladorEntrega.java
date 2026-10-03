@@ -13,6 +13,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+/**
+ * Controlador de Entregas: valida los datos que llegan desde la vista
+ * y delega las operaciones de base de datos al EntregaDAO.
+ */
 public class ControladorEntrega {
 
     // Iniciamos su DAO para conversar con BD
@@ -32,6 +36,40 @@ public class ControladorEntrega {
         return entregaDAO.readAll();
     }
 
+
+    // Retorna las entregas aplicando los filtros opcionales.
+    public List<Entrega> listarEntregas(Pedido pedido, Repartidor repartidor) throws SQLException {
+        List<Entrega> entregas;
+        if (pedido != null) {
+            entregas = entregaDAO.readByPedido(pedido.getId());
+        } else if (repartidor != null) {
+            entregas = entregaDAO.readByRepartidor(repartidor.getId());
+        } else {
+            entregas = entregaDAO.readAll();
+        }
+        // Si se eligieron los dos filtros, se aplica el de repartidor sobre el resultado
+        if (pedido != null && repartidor != null) {
+            entregas.removeIf(e -> !e.getRepartidor().equals(repartidor));
+        }
+        return entregas;
+    }
+
+
+    // Recarga el modelo de la tabla con las entregas de la BD, aplicando los filtros.
+    public void cargarTabla(DefaultTableModel modelo, Pedido pedido, Repartidor repartidor) throws SQLException {
+        modelo.setRowCount(0); // Vaciamos tabla
+        for (Entrega e : listarEntregas(pedido, repartidor)) {
+            modelo.addRow(new Object[]{
+                    e.getId(),
+                    e.getPedido(),
+                    e.getRepartidor(),
+                    e.getFecha(),
+                    e.getHora()
+            });
+        }
+    }
+
+    // Valido y actualizo una entrega existente
     public void editarEntrega(int id, Pedido pedido, Repartidor repartidor, String fecha, String hora) throws SQLException {
         // Validamos
         validarId(id);
@@ -45,6 +83,7 @@ public class ControladorEntrega {
         entregaDAO.update(entrega);
     }
 
+    // Elimino la entrega con el id indicado
     public void eliminarEntrega(int id) throws SQLException {
         // Valido id
         validarId(id);
@@ -52,23 +91,7 @@ public class ControladorEntrega {
         entregaDAO.delete(id);
     }
 
-    /**
-     * Recarga el modelo de la tabla con las entregas de la BD.
-     * Se llama al abrir la ventana y después de cada agregar/editar/eliminar.
-     */
-    public void cargarTabla(DefaultTableModel modelo) throws SQLException {
-        modelo.setRowCount(0);
-        for (Entrega e : listarEntregas()) {
-            modelo.addRow(new Object[]{
-                    e.getId(),
-                    e.getPedido(),
-                    e.getRepartidor(),
-                    e.getFecha(),
-                    e.getHora()
-            });
-        }
-    }
-
+    // Valido que se haya elegido un pedido y un repartidor
     private void validarDatos(Pedido pedido, Repartidor repartidor) {
         if (pedido == null) {
             throw new IllegalArgumentException("Debes seleccionar un pedido.");
@@ -78,6 +101,7 @@ public class ControladorEntrega {
         }
     }
 
+    // Valido que se haya seleccionado una entrega
     private void validarId(int id) {
         if (id <= 0) {
             throw new IllegalArgumentException("Debes seleccionar una entrega.");
@@ -96,7 +120,7 @@ public class ControladorEntrega {
         }
     }
 
-    // Convierte el texto a hora;
+    // Convierte el texto a hora
     private LocalTime convertirHora(String texto) {
         if (texto == null || texto.trim().isEmpty()) {
             throw new IllegalArgumentException("La hora es obligatoria.");
