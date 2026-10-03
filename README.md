@@ -1,60 +1,75 @@
-# SpeedFast — Semana 7: Conectando aplicaciones Java con bases de datos mediante JDBC
+# SpeedFast — Semana 8: Gestionando datos mediante operaciones CRUD
 
-Actividad formativa individual de la asignatura **Desarrollo Orientado a Objetos II**, Semana 7.
+Actividad sumativa individual de la asignatura **Desarrollo Orientado a Objetos II**, Semana 8.
 
-## Caso: persistencia de pedidos en SpeedFast
+## Caso: gestión de pedidos en SpeedFast
 
-La aplicación de escritorio (Java Swing) construida en la semana 6 ahora **guarda y consulta la información en una base de datos MySQL** mediante JDBC. Los pedidos, repartidores y entregas se registran desde los formularios y se mantienen aunque se cierre la aplicación.
+Aplicación de escritorio en **Java Swing** que permite gestionar **repartidores, pedidos y entregas** de la empresa SpeedFast de forma persistente. Cada entidad tiene su ventana con las cuatro operaciones CRUD (registrar, listar, editar y eliminar), conectadas a una base de datos **MySQL** mediante **JDBC** y el **patrón DAO**.
 
 ## Requisitos
 
 - JDK 21 o superior
-- IntelliJ IDEA (el proyecto usa formularios del GUI Designer de IntelliJ)
+- IntelliJ IDEA
 - MySQL Server 8.4 y MySQL Workbench
 - Maven (incluido en IntelliJ). El driver se descarga automáticamente:
   `com.mysql:mysql-connector-j:8.4.0`
 
 ## Cómo ejecutar
 
-1. **Crear la base de datos:** abrir `database/speedfast_db.sql` en MySQL Workbench y ejecutarlo completo. Crea `speedfast_db`, las tablas `repartidor`, `pedido` y `entrega` (con sus claves foráneas) y carga datos de prueba.
-2. **Configurar la conexión:** en `src/main/java/com/puertogames/semana6/dao/ConexionBD.java` ajustar el usuario y la contraseña de MySQL:
+1. **Crear la base de datos:** abrir `database/speedfast_db.sql` en MySQL Workbench y ejecutarlo completo. Crea `speedfast_db` y las tablas `repartidores`, `pedidos` y `entregas` con sus claves foráneas. Al final del script hay datos de prueba opcionales (comentados).
+2. **Configurar la conexión:** en `src/main/java/com/puertogames/semana6/util/ConexionBD.java` ajustar el usuario y la contraseña de MySQL:
    ```java
    private static final String URL = "jdbc:mysql://localhost:3306/speedfast_db";
    private static final String USER = "root";
    private static final String PASSWORD = "tu_contraseña";
    ```
-3. **Probar la conexión (opcional):** ejecutar `main/PruebaConexion`. Debe imprimir "Conexion exitosa".
-4. **Ejecutar la aplicación:** ejecutar `main/Main`.
+3. **Ejecutar la aplicación:** ejecutar la clase `main/Main`. Se abre el menú principal, desde el que se accede a cada gestión.
 
 ## Modelo de base de datos
 
 | Tabla | Columnas | Relación |
 |---|---|---|
-| `repartidor` | id (PK, AUTO_INCREMENT), nombre | Un repartidor puede realizar muchas entregas |
-| `pedido` | id (PK, AUTO_INCREMENT), direccion, tipo, estado | Un pedido puede tener una o varias entregas |
-| `entrega` | id (PK), id_pedido (FK), id_repartidor (FK), fecha, hora | Cada entrega se asocia a un pedido y a un repartidor |
+| `repartidores` | id (PK, AUTO_INCREMENT), nombre | Un repartidor puede realizar muchas entregas |
+| `pedidos` | id (PK, AUTO_INCREMENT), direccion, tipo (ENUM), estado (ENUM) | Un pedido puede tener una o varias entregas |
+| `entregas` | id (PK), id_pedido (FK), id_repartidor (FK), fecha, hora | Cada entrega asocia un pedido con un repartidor |
+
+- **Tipo de pedido:** COMIDA, ENCOMIENDA, EXPRESS.
+- **Estado de pedido:** PENDIENTE, EN_REPARTO, ENTREGADO.
+
+## Funcionalidades
+
+- **Gestión de Repartidores:** registrar (nombre), editar, eliminar y listar en tabla.
+- **Gestión de Pedidos:** registrar (dirección, tipo, estado), editar, eliminar y listar en tabla, con filtros opcionales por estado y por tipo.
+- **Gestión de Entregas:** registrar una entrega asociando un pedido y un repartidor con fecha y hora, editar, eliminar y listar en tabla, con filtros por pedido y por repartidor. El pedido y el repartidor se eligen en combos cargados desde la base de datos, que muestran `id - dirección` e `id - nombre`.
 
 ## Estructura del proyecto (`com.puertogames.semana6`)
 
-- **dao** — acceso a datos con JDBC:
-  - `ConexionBD` — gestiona la conexión con `DriverManager` (`conectar()` y `cerrar()`).
-  - `PedidoDAO` — `guardar(Pedido)` con `PreparedStatement` y `listarTodos()` con `ResultSet`.
-  - `RepartidorDAO` — `listarTodos()` devuelve una `List<Repartidor>` usando `ResultSet`, y `guardar(Repartidor)`.
-  - `EntregaDAO` — `guardar(Entrega)` registra la relación entre pedido y repartidor con fecha y hora.
-- **modelo** — `Pedido`, `Repartidor`, `Entrega`, y los enums `TipoPedido` y `EstadoPedido`.
-- **controlador** — `ControladorPedido` y `ControladorRepartidor`: conectan las vistas con los DAO.
-- **vista** — ventanas Swing:
-  - `VentanaPrincipal` — menú con Registrar Pedido, Listar Pedidos, Asignar Repartidor y Registrar Repartidor.
-  - `VentanaRegistroPedido` — registra un pedido en la BD (el ID lo asigna MySQL).
-  - `VentanaListaPedidos` — muestra los pedidos almacenados en un `JTable` (ID, Dirección, Tipo, Estado, Repartidor).
-  - `VentanaAsignarRepartidor` — elige un pedido y un repartidor desde la BD y registra una entrega.
-  - `VentanaRegistroRepartidor` — registra un repartidor en la BD.
-- **main** — `Main` (inicia la app) y `PruebaConexion` (prueba JDBC con `try-catch-finally`).
+El proyecto está separado en capas: **vista → controlador → DAO → MySQL**.
+
+- **modelo** — `Repartidor`, `Pedido`, `Entrega`, y los enums `TipoPedido` y `EstadoPedido`.
+- **dao** — interfaces `RepartidorDAO`, `PedidoDAO` y `EntregaDAO`, con los métodos `create()`, `readAll()`, `update()` y `delete()`. `PedidoDAO` agrega `readByEstado()` y `readByTipo()`; `EntregaDAO` agrega `readByPedido()` y `readByRepartidor()`.
+- **dao.impl** — `RepartidorDAOImpl`, `PedidoDAOImpl` y `EntregaDAOImpl`: implementaciones JDBC con `PreparedStatement` y `ResultSet`. `EntregaDAOImpl` usa `JOIN` para traer cada entrega con su pedido y su repartidor.
+- **util** — `ConexionBD`: entrega la conexión a MySQL con `DriverManager`.
+- **controlador** — `ControladorRepartidor`, `ControladorPedido` y `ControladorEntrega`: validan los datos que llegan desde la vista, llaman al DAO y cargan las tablas.
+- **vista** — ventanas Swing escritas en código:
+  - `VentanaPrincipal` — menú con acceso a las tres gestiones.
+  - `GestionRepartidores`, `GestionPedidos` y `GestionEntregas` — formulario, tabla (`JTable`) y botones Agregar, Editar, Eliminar y Limpiar.
+- **main** — `Main`: inicia la aplicación.
+
+## Validaciones y manejo de errores
+
+- **Validación de entradas** (en los controladores, antes de ir a la base de datos): campos obligatorios, largo máximo de 100 caracteres en nombre y dirección, selección obligatoria en los combos y en la tabla, y formato de fecha (`AAAA-MM-DD`) y hora (`HH:MM`).
+- **Errores de base de datos:** los DAO registran la `SQLException` con `Logger` y la relanzan; la vista la atrapa y muestra un mensaje claro con `JOptionPane`. Por ejemplo, al eliminar un repartidor o un pedido que tiene entregas asociadas se informa que no se puede eliminar.
+- **Confirmación** antes de eliminar un registro.
 
 ## Buenas prácticas aplicadas
 
 - `PreparedStatement` con parámetros `?` en todas las consultas (previene inyección SQL).
-- Cierre de recursos con `try-with-resources` en los DAO y `try-catch-finally` en la prueba de conexión.
-- Manejo de `SQLException` con mensaje en consola (`printStackTrace`) y aviso al usuario (`JOptionPane`).
-- Enums guardados con `name()` y leídos con `valueOf()` para mantener consistencia con la BD.
-- Separación en capas: vista → controlador → DAO → MySQL.
+- Cierre de recursos con `try-with-resources` (conexión, sentencia y resultado).
+- Enums guardados con `name()` y leídos con `valueOf()` para mantener consistencia con las columnas `ENUM`.
+- Código reutilizado en métodos privados (`mapearEntrega`, `validarNombre`, `validarId`, `convertirFecha`, entre otros).
+- Separación por capas y comentarios en clases y métodos clave.
+
+## Nota sobre las instrucciones
+
+El Paso 2 de las instrucciones menciona una clase `ClienteDAO`. Como el esquema relacional entregado no incluye una tabla de clientes, ese rol lo cumple `RepartidorDAO`, que corresponde a la primera de las tres entidades del caso.
