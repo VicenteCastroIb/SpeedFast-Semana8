@@ -2,7 +2,7 @@ package com.puertogames.semana6.dao.impl;
 
 import com.puertogames.semana6.dao.RepartidorDAO;
 import com.puertogames.semana6.modelo.Repartidor;
-import com.puertogames.semana6.util.ConexionBD;
+import com.puertogames.semana6.util.ConexionDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,7 +26,7 @@ public class RepartidorDAOImpl implements RepartidorDAO{
     @Override
     public void create(Repartidor repartidor) throws SQLException {
         String sql = "INSERT INTO repartidores (nombre) VALUES (?)";
-        try (Connection connection = ConexionBD.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1,repartidor.getNombre());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -40,7 +40,7 @@ public class RepartidorDAOImpl implements RepartidorDAO{
     public List<Repartidor> readAll() throws SQLException {
         List<Repartidor> listaRepartidores = new ArrayList<>();
         String sql = "SELECT id, nombre FROM repartidores";
-        try (Connection connection = ConexionBD.conectar() ; PreparedStatement ps = connection.prepareStatement(sql) ; ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while(rs.next()){
                 listaRepartidores.add(new Repartidor(rs.getInt("id"), rs.getString("nombre")));
             }
@@ -55,7 +55,7 @@ public class RepartidorDAOImpl implements RepartidorDAO{
     @Override
     public void update(Repartidor repartidor) throws SQLException {
         String sql = "UPDATE repartidores SET nombre=? WHERE id=?";
-        try (Connection connection = ConexionBD.conectar() ; PreparedStatement ps = connection.prepareStatement(sql)){
+        try (Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, repartidor.getNombre());
             ps.setInt(2, repartidor.getId());
             ps.executeUpdate();
@@ -69,7 +69,7 @@ public class RepartidorDAOImpl implements RepartidorDAO{
     @Override
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM repartidores WHERE id=?";
-        try (Connection connection = ConexionBD.conectar() ; PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {

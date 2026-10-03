@@ -2,7 +2,7 @@ package com.puertogames.semana6.dao.impl;
 
 import com.puertogames.semana6.dao.EntregaDAO;
 import com.puertogames.semana6.modelo.*;
-import com.puertogames.semana6.util.ConexionBD;
+import com.puertogames.semana6.util.ConexionDB;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class EntregaDAOImpl implements EntregaDAO {
     @Override
     public void create(Entrega entrega) throws SQLException {
         String sql = "INSERT INTO entregas (id_pedido, id_repartidor, fecha, hora) VALUES (?, ?, ?, ?)";
-        try (Connection connection = ConexionBD.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, entrega.getPedido().getId());
             ps.setInt(2, entrega.getRepartidor().getId());
             ps.setDate(3, Date.valueOf(entrega.getFecha()));
@@ -55,7 +55,7 @@ public class EntregaDAOImpl implements EntregaDAO {
     public List<Entrega> readAll() throws SQLException {
         List<Entrega> listaEntregas = new ArrayList<>();
         String sql = SELECT_BASE + " ORDER BY e.fecha DESC, e.hora DESC";
-        try (Connection connection = ConexionBD.conectar() ; PreparedStatement ps = connection.prepareStatement(sql) ; ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while(rs.next()){
                 listaEntregas.add(mapearEntrega(rs));
@@ -74,7 +74,7 @@ public class EntregaDAOImpl implements EntregaDAO {
     public List<Entrega> readByPedido(int idPedido) throws SQLException {
         List<Entrega> listaEntregasPorPedido = new ArrayList<>();
         String sql = SELECT_BASE + " WHERE p.id=? ORDER BY e.fecha DESC, e.hora DESC";
-        try (Connection connection = ConexionBD.conectar() ; PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setInt(1, idPedido);
             try (ResultSet rs = ps.executeQuery()) {
@@ -96,7 +96,7 @@ public class EntregaDAOImpl implements EntregaDAO {
     public List<Entrega> readByRepartidor(int idRepartidor) throws SQLException {
         List<Entrega> listaEntregaPorRepartidor = new ArrayList<>();
         String sql = SELECT_BASE + " WHERE r.id=? ORDER BY e.fecha DESC, e.hora DESC";
-        try (Connection connection = ConexionBD.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, idRepartidor);
             try(ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -117,7 +117,7 @@ public class EntregaDAOImpl implements EntregaDAO {
     @Override
     public void update(Entrega entrega) throws SQLException {
         String sql = "UPDATE entregas SET id_pedido=?, id_repartidor=?, fecha=?, hora=? WHERE id=?";
-        try(Connection connection = ConexionBD.conectar() ; PreparedStatement ps = connection.prepareStatement(sql)) {
+        try(Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, entrega.getPedido().getId());
             ps.setInt(2, entrega.getRepartidor().getId());
             ps.setDate(3, Date.valueOf(entrega.getFecha()));
@@ -136,7 +136,7 @@ public class EntregaDAOImpl implements EntregaDAO {
     @Override
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM entregas WHERE id=?";
-        try (Connection connection = ConexionBD.conectar() ; PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection connection = ConexionDB.conectar(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {

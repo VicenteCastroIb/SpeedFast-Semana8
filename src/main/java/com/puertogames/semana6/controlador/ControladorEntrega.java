@@ -31,11 +31,6 @@ public class ControladorEntrega {
         Entrega entrega = new Entrega(0, pedido, repartidor, fechaEntrega, horaEntrega);
         entregaDAO.create(entrega);
     }
-    // Listar todas las entregas
-    public List<Entrega> listarEntregas() throws SQLException {
-        return entregaDAO.readAll();
-    }
-
 
     // Retorna las entregas aplicando los filtros opcionales.
     public List<Entrega> listarEntregas(Pedido pedido, Repartidor repartidor) throws SQLException {

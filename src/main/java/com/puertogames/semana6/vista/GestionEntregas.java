@@ -9,9 +9,12 @@ import com.puertogames.semana6.modelo.Repartidor;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 /**
  * Ventana de gestión de entregas, permite registrar, editar, eliminar y listar
@@ -54,9 +57,18 @@ public class GestionEntregas extends JFrame {
         armarVentana();
         inicializarTabla();
         inicializarBotones();
-        cargarCombos();
+        cargarCombos(true);
         limpiarFormulario();
         cargarTabla();
+
+        // Cada vez que se vuelve a esta ventana, se refrescan los combos
+        // por si se crearon, editaron o eliminaron pedidos o repartidores
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+                cargarCombos(false);
+            }
+        });
     }
 
     // Ubico componentes
@@ -138,8 +150,10 @@ public class GestionEntregas extends JFrame {
     /**
      * Carga en los combos los pedidos y repartidores que existen en la BD.
      * Conserva lo que estaba seleccionado antes de recargar.
+     * avisarError, si es true muestra un mensaje cuando falla la BD, al refrescar
+     * en segundo plano va en false, para no repetir el aviso cada vez que la ventana se activa.
      */
-    private void cargarCombos() {
+    private void cargarCombos(boolean avisarError) {
         cargandoCombos = true;
         try {
             // Guardamos la selección actual para restaurarla después
@@ -148,10 +162,14 @@ public class GestionEntregas extends JFrame {
             Object filtroPedidoActual = cmbFiltroPedido.getSelectedItem();
             Object filtroRepartidorActual = cmbFiltroRepartidor.getSelectedItem();
 
+            // Primero se consulta la BD: si falla, los combos quedan como estaban
+            List<Pedido> pedidos = controladorPedido.listarPedidos();
+            List<Repartidor> repartidores = controladorRepartidor.listarRepartidores();
+
             cmbPedido.removeAllItems();
             cmbFiltroPedido.removeAllItems();
             cmbFiltroPedido.addItem("Todos");
-            for (Pedido p : controladorPedido.listarPedidos()) {
+            for (Pedido p : pedidos) {
                 cmbPedido.addItem(p);
                 cmbFiltroPedido.addItem(p);
             }
@@ -159,7 +177,7 @@ public class GestionEntregas extends JFrame {
             cmbRepartidor.removeAllItems();
             cmbFiltroRepartidor.removeAllItems();
             cmbFiltroRepartidor.addItem("Todos");
-            for (Repartidor r : controladorRepartidor.listarRepartidores()) {
+            for (Repartidor r : repartidores) {
                 cmbRepartidor.addItem(r);
                 cmbFiltroRepartidor.addItem(r);
             }
@@ -170,9 +188,11 @@ public class GestionEntregas extends JFrame {
             restaurarSeleccion(cmbFiltroPedido, filtroPedidoActual);
             restaurarSeleccion(cmbFiltroRepartidor, filtroRepartidorActual);
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this,
-                    "No se pudieron cargar los pedidos y repartidores.\n" + e.getMessage(),
-                    "Error de base de datos", JOptionPane.ERROR_MESSAGE);
+            if (avisarError) {
+                JOptionPane.showMessageDialog(this,
+                        "No se pudieron cargar los pedidos y repartidores.\n" + e.getMessage(),
+                        "Error de base de datos", JOptionPane.ERROR_MESSAGE);
+            }
         } finally {
             cargandoCombos = false;
         }

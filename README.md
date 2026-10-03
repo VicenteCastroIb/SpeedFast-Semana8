@@ -16,8 +16,8 @@ Aplicación de escritorio en **Java Swing** que permite gestionar **repartidores
 
 ## Cómo ejecutar
 
-1. **Crear la base de datos:** abrir `database/speedfast_db.sql` en MySQL Workbench y ejecutarlo completo. Crea `speedfast_db` y las tablas `repartidores`, `pedidos` y `entregas` con sus claves foráneas. Al final del script hay datos de prueba opcionales (comentados).
-2. **Configurar la conexión:** en `src/main/java/com/puertogames/semana6/util/ConexionBD.java` ajustar el usuario y la contraseña de MySQL:
+1. **Crear la base de datos:** abrir `database/speedfast_db.sql` en MySQL Workbench y ejecutarlo completo. Crea `speedfast_db` y las tablas `repartidores`, `pedidos` y `entregas` con sus claves foráneas.
+2. **Configurar la conexión:** en `src/main/java/com/puertogames/semana6/util/ConexionDB.java` ajustar el usuario y la contraseña de MySQL:
    ```java
    private static final String URL = "jdbc:mysql://localhost:3306/speedfast_db";
    private static final String USER = "root";
@@ -49,7 +49,7 @@ El proyecto está separado en capas: **vista → controlador → DAO → MySQL**
 - **modelo** — `Repartidor`, `Pedido`, `Entrega`, y los enums `TipoPedido` y `EstadoPedido`.
 - **dao** — interfaces `RepartidorDAO`, `PedidoDAO` y `EntregaDAO`, con los métodos `create()`, `readAll()`, `update()` y `delete()`. `PedidoDAO` agrega `readByEstado()` y `readByTipo()`; `EntregaDAO` agrega `readByPedido()` y `readByRepartidor()`.
 - **dao.impl** — `RepartidorDAOImpl`, `PedidoDAOImpl` y `EntregaDAOImpl`: implementaciones JDBC con `PreparedStatement` y `ResultSet`. `EntregaDAOImpl` usa `JOIN` para traer cada entrega con su pedido y su repartidor.
-- **util** — `ConexionBD`: entrega la conexión a MySQL con `DriverManager`.
+- **util** — `ConexionDB`: entrega la conexión a MySQL con `DriverManager`.
 - **controlador** — `ControladorRepartidor`, `ControladorPedido` y `ControladorEntrega`: validan los datos que llegan desde la vista, llaman al DAO y cargan las tablas.
 - **vista** — ventanas Swing escritas en código:
   - `VentanaPrincipal` — menú con acceso a las tres gestiones.

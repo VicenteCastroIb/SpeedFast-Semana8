@@ -17,9 +17,8 @@ public class Repartidor {
         this.nombre = nombre;
     }
 
-    // Getters y Setters
+    // Getters
     public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
     public String getNombre() { return nombre; }
 
     // Texto que se muestra en los combos y tablas: "id - nombre"

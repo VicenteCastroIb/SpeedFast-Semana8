@@ -6,14 +6,6 @@ public class Pedido {
     private String direccion;
     private TipoPedido tipoPedido;
     private EstadoPedido estado;
-    private Repartidor repartidor;
-
-    // Pedido nuevo, parte en estado PENDIENTE
-    public Pedido(String direccion, TipoPedido tipoPedido) {
-        this.direccion = direccion;
-        this.tipoPedido = tipoPedido;
-        this.estado = EstadoPedido.PENDIENTE;
-    }
 
     // Pedido nuevo con el estado elegido
     public Pedido(String direccion, TipoPedido tipoPedido, EstadoPedido estado) {
@@ -30,22 +22,11 @@ public class Pedido {
         this.estado = estado;
     }
 
-    // Pedido existente en estado PENDIENTE
-    public Pedido(int id, String direccion, TipoPedido tipoPedido) {
-        this(id, direccion, tipoPedido, EstadoPedido.PENDIENTE);
-    }
-
     // Getters
     public int getId() { return id; }
     public String getDireccion() { return direccion; }
     public TipoPedido getTipoPedido() { return tipoPedido; }
     public EstadoPedido getEstado() { return estado; }
-    public Repartidor getRepartidor() { return repartidor; }
-
-    // Setters
-    public void setId(int id) { this.id = id; }
-    public void setEstado(EstadoPedido estado) { this.estado = estado; }
-    public void setRepartidor(Repartidor repartidor) { this.repartidor = repartidor; }
 
     // Texto que se muestra en los combos y tablas: "id - dirección"
     @Override
