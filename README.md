@@ -17,7 +17,7 @@ Aplicación de escritorio en **Java Swing** que permite gestionar **repartidores
 ## Cómo ejecutar
 
 1. **Crear la base de datos:** abrir `database/speedfast_db.sql` en MySQL Workbench y ejecutarlo completo. Crea `speedfast_db` y las tablas `repartidores`, `pedidos` y `entregas` con sus claves foráneas.
-2. **Configurar la conexión:** en `src/main/java/com/puertogames/semana6/util/ConexionDB.java` ajustar el usuario y la contraseña de MySQL:
+2. **Configurar la conexión:** en `src/main/java/com/puertogames/semana8/util/ConexionDB.java` ajustar el usuario y la contraseña de MySQL:
    ```java
    private static final String URL = "jdbc:mysql://localhost:3306/speedfast_db";
    private static final String USER = "root";
@@ -42,7 +42,7 @@ Aplicación de escritorio en **Java Swing** que permite gestionar **repartidores
 - **Gestión de Pedidos:** registrar (dirección, tipo, estado), editar, eliminar y listar en tabla, con filtros opcionales por estado y por tipo.
 - **Gestión de Entregas:** registrar una entrega asociando un pedido y un repartidor con fecha y hora, editar, eliminar y listar en tabla, con filtros por pedido y por repartidor. El pedido y el repartidor se eligen en combos cargados desde la base de datos, que muestran `id - dirección` e `id - nombre`.
 
-## Estructura del proyecto (`com.puertogames.semana6`)
+## Estructura del proyecto (`com.puertogames.semana8`)
 
 El proyecto está separado en capas: **vista → controlador → DAO → MySQL**.
 
