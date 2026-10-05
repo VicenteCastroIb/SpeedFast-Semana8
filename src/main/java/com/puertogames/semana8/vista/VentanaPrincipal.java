@@ -1,4 +1,4 @@
-package com.puertogames.semana6.vista;
+package com.puertogames.semana8.vista;
 
 import javax.swing.*;
 import java.awt.*;

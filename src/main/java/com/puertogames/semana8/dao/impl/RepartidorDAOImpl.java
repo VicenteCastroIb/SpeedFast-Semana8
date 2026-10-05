@@ -1,8 +1,8 @@
-package com.puertogames.semana6.dao.impl;
+package com.puertogames.semana8.dao.impl;
 
-import com.puertogames.semana6.dao.RepartidorDAO;
-import com.puertogames.semana6.modelo.Repartidor;
-import com.puertogames.semana6.util.ConexionDB;
+import com.puertogames.semana8.dao.RepartidorDAO;
+import com.puertogames.semana8.modelo.Repartidor;
+import com.puertogames.semana8.util.ConexionDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

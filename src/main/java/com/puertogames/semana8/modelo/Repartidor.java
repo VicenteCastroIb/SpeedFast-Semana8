@@ -1,4 +1,4 @@
-package com.puertogames.semana6.modelo;
+package com.puertogames.semana8.modelo;
 
 // Repartidor de SpeedFast
 public class Repartidor {

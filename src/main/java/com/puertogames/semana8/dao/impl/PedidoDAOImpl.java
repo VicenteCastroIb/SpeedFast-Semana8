@@ -1,10 +1,10 @@
-package com.puertogames.semana6.dao.impl;
+package com.puertogames.semana8.dao.impl;
 
-import com.puertogames.semana6.dao.PedidoDAO;
-import com.puertogames.semana6.modelo.EstadoPedido;
-import com.puertogames.semana6.modelo.Pedido;
-import com.puertogames.semana6.modelo.TipoPedido;
-import com.puertogames.semana6.util.ConexionDB;
+import com.puertogames.semana8.dao.PedidoDAO;
+import com.puertogames.semana8.modelo.EstadoPedido;
+import com.puertogames.semana8.modelo.Pedido;
+import com.puertogames.semana8.modelo.TipoPedido;
+import com.puertogames.semana8.util.ConexionDB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,10 +1,10 @@
-package com.puertogames.semana6.controlador;
+package com.puertogames.semana8.controlador;
 
-import com.puertogames.semana6.dao.EntregaDAO;
-import com.puertogames.semana6.dao.impl.EntregaDAOImpl;
-import com.puertogames.semana6.modelo.Entrega;
-import com.puertogames.semana6.modelo.Pedido;
-import com.puertogames.semana6.modelo.Repartidor;
+import com.puertogames.semana8.dao.EntregaDAO;
+import com.puertogames.semana8.dao.impl.EntregaDAOImpl;
+import com.puertogames.semana8.modelo.Entrega;
+import com.puertogames.semana8.modelo.Pedido;
+import com.puertogames.semana8.modelo.Repartidor;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;

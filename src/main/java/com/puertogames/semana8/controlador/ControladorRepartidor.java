@@ -1,8 +1,8 @@
-package com.puertogames.semana6.controlador;
+package com.puertogames.semana8.controlador;
 
-import com.puertogames.semana6.dao.RepartidorDAO;
-import com.puertogames.semana6.dao.impl.RepartidorDAOImpl;
-import com.puertogames.semana6.modelo.Repartidor;
+import com.puertogames.semana8.dao.RepartidorDAO;
+import com.puertogames.semana8.dao.impl.RepartidorDAOImpl;
+import com.puertogames.semana8.modelo.Repartidor;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;

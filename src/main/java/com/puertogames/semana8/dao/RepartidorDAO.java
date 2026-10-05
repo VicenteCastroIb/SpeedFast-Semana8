@@ -1,6 +1,6 @@
-package com.puertogames.semana6.dao;
+package com.puertogames.semana8.dao;
 
-import com.puertogames.semana6.modelo.Repartidor;
+import com.puertogames.semana8.modelo.Repartidor;
 
 import java.sql.SQLException;
 import java.util.List;

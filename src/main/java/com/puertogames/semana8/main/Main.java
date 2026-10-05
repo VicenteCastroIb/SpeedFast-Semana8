@@ -1,6 +1,6 @@
-package com.puertogames.semana6.main;
+package com.puertogames.semana8.main;
 
-import com.puertogames.semana6.vista.VentanaPrincipal;
+import com.puertogames.semana8.vista.VentanaPrincipal;
 
 import javax.swing.SwingUtilities;
 

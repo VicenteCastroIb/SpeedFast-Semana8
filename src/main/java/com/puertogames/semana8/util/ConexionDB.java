@@ -1,4 +1,4 @@
-package com.puertogames.semana6.util;
+package com.puertogames.semana8.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

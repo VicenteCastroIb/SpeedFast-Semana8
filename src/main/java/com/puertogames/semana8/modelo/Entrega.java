@@ -1,9 +1,9 @@
-package com.puertogames.semana6.modelo;
+package com.puertogames.semana8.modelo;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-// Entrega: asocia un pedido con un repartidor en una fecha y hora
+// Asocia un pedido con un repartidor en una fecha y hora
 public class Entrega {
     private int id;
     private Pedido pedido;
@@ -11,7 +11,7 @@ public class Entrega {
     private LocalDate fecha;
     private LocalTime hora;
 
-    // Entrega nueva (id 0) o existente, leída desde la BD o editada
+    // Entrega nueva o existente, leída desde la BD o editada
     public Entrega(int id, Pedido pedido, Repartidor repartidor, LocalDate fecha, LocalTime hora) {
         this.id = id;
         this.pedido = pedido;

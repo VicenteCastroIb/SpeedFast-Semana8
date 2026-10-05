@@ -1,4 +1,4 @@
-package com.puertogames.semana6.modelo;
+package com.puertogames.semana8.modelo;
 
 // Pedido de SpeedFast: dirección, tipo y estado
 public class Pedido {

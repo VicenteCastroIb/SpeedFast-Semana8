@@ -1,4 +1,4 @@
-package com.puertogames.semana6.modelo;
+package com.puertogames.semana8.modelo;
 
 // Estados por los que pasa un pedido
 public enum EstadoPedido {

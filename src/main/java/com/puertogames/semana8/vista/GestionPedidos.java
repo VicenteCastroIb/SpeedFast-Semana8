@@ -1,8 +1,8 @@
-package com.puertogames.semana6.vista;
+package com.puertogames.semana8.vista;
 
-import com.puertogames.semana6.controlador.ControladorPedido;
-import com.puertogames.semana6.modelo.EstadoPedido;
-import com.puertogames.semana6.modelo.TipoPedido;
+import com.puertogames.semana8.controlador.ControladorPedido;
+import com.puertogames.semana8.modelo.EstadoPedido;
+import com.puertogames.semana8.modelo.TipoPedido;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

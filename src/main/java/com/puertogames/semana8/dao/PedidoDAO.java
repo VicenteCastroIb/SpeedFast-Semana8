@@ -1,8 +1,8 @@
-package com.puertogames.semana6.dao;
+package com.puertogames.semana8.dao;
 
-import com.puertogames.semana6.modelo.EstadoPedido;
-import com.puertogames.semana6.modelo.Pedido;
-import com.puertogames.semana6.modelo.TipoPedido;
+import com.puertogames.semana8.modelo.EstadoPedido;
+import com.puertogames.semana8.modelo.Pedido;
+import com.puertogames.semana8.modelo.TipoPedido;
 
 import java.sql.SQLException;
 import java.util.List;

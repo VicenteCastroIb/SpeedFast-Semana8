@@ -1,4 +1,4 @@
-package com.puertogames.semana6.modelo;
+package com.puertogames.semana8.modelo;
 
 // Tipos de pedido que maneja SpeedFast
 public enum TipoPedido {
@@ -6,7 +6,7 @@ public enum TipoPedido {
     ENCOMIENDA,
     EXPRESS;
 
-    // Texto para mostrar en pantalla: "Comida", "Encomienda", "Express"
+    // Texto para mostrar "Comida", "Encomienda", "Express"
     @Override
     public String toString() {
         String texto = name().toLowerCase();

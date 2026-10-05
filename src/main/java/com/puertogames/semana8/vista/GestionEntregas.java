@@ -1,10 +1,10 @@
-package com.puertogames.semana6.vista;
+package com.puertogames.semana8.vista;
 
-import com.puertogames.semana6.controlador.ControladorEntrega;
-import com.puertogames.semana6.controlador.ControladorPedido;
-import com.puertogames.semana6.controlador.ControladorRepartidor;
-import com.puertogames.semana6.modelo.Pedido;
-import com.puertogames.semana6.modelo.Repartidor;
+import com.puertogames.semana8.controlador.ControladorEntrega;
+import com.puertogames.semana8.controlador.ControladorPedido;
+import com.puertogames.semana8.controlador.ControladorRepartidor;
+import com.puertogames.semana8.modelo.Pedido;
+import com.puertogames.semana8.modelo.Repartidor;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
