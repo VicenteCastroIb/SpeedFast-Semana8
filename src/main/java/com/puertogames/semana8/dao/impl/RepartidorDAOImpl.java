@@ -14,10 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-/**
- * Implementación JDBC de RepartidorDAO.
- * Ejecuta las operaciones CRUD sobre la tabla repartidores.
- */
+// Implementación JDBC de RepartidorDAO: CRUD sobre la tabla repartidores
 public class RepartidorDAOImpl implements RepartidorDAO{
 
     private static final Logger LOGGER = Logger.getLogger(RepartidorDAOImpl.class.getName());

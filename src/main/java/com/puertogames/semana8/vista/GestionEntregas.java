@@ -16,10 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-/**
- * Ventana de gestión de entregas, permite registrar, editar, eliminar y listar
- * entregas
- */
+// Ventana de gestión de entregas: registrar, editar, eliminar y listar
 public class GestionEntregas extends JFrame {
 
     // Componentes del formulario
@@ -46,7 +43,7 @@ public class GestionEntregas extends JFrame {
     private DefaultTableModel modelo;
     // Indica que los combos se están recargando, para no refrescar la tabla a medias
     private boolean cargandoCombos = false;
-    // Indica que la tabla se está refrescando sola, para no pisar lo que el usuario tiene en el formulario
+    // Indica que la tabla se está refrescando sola
     private boolean refrescandoTabla = false;
 
     // Constructor para configurar ventana
@@ -63,8 +60,7 @@ public class GestionEntregas extends JFrame {
         limpiarFormulario();
         cargarTabla();
 
-        // Cada vez que se vuelve a esta ventana, se refrescan los combos y la tabla
-        // por si se crearon, editaron o eliminaron pedidos o repartidores
+        // Al volver a esta ventana se refrescan los combos y la tabla
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowActivated(WindowEvent e) {
@@ -125,8 +121,7 @@ public class GestionEntregas extends JFrame {
         tblEntregas.setModel(modelo);
         tblEntregas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // Al seleccionar una fila, copia sus datos al formulario
-        // (excepto en el refresco automático, para conserva lo que el usuario estaba editando)
+        // Al seleccionar una fila, copia sus datos al formulario (salvo al refrescar sola)
         tblEntregas.getSelectionModel().addListSelectionListener(e -> {
             int fila = tblEntregas.getSelectedRow();
             if (fila >= 0 && !refrescandoTabla) {
@@ -150,10 +145,7 @@ public class GestionEntregas extends JFrame {
         cmbFiltroRepartidor.addActionListener(e -> cargarTabla());
     }
 
-    /**
-     * Carga en los combos los pedidos y repartidores que existen en la BD.
-     * Conserva lo que estaba seleccionado antes de recargar.
-     */
+    // Carga los combos desde la BD, conservando lo que estaba seleccionado
     private boolean cargarCombos(boolean avisarError) {
         cargandoCombos = true;
         try {
@@ -208,9 +200,7 @@ public class GestionEntregas extends JFrame {
         }
     }
 
-    /**
-     * Refresca combos y tabla al volver a esta ventana, sin mostrar avisos.
-     */
+    // Refresca combos y tabla al volver a esta ventana, sin mostrar avisos
     private void refrescarAlVolver() {
         if (!cargarCombos(false)) {
             return; // sin conexión
@@ -225,7 +215,7 @@ public class GestionEntregas extends JFrame {
         }
     }
 
-    // Vuelve a marcar en la tabla la entrega con el id indicadoo
+    // Vuelve a marcar en la tabla la entrega con el id indicado
     private void seleccionarFila(int id) {
         for (int fila = 0; fila < modelo.getRowCount(); fila++) {
             if ((int) modelo.getValueAt(fila, 0) == id) {
@@ -240,10 +230,7 @@ public class GestionEntregas extends JFrame {
         cargarTabla(true);
     }
 
-    /**
-     * Lee los filtros y pide al controlador que recargue la tabla.
-     * avisarError, si es false no muestra mensaje cuando falla la BD (refresco en segundo plano).
-     */
+    // Lee los filtros y recarga la tabla, con aviso de error opcional
     private void cargarTabla(boolean avisarError) {
         if (cargandoCombos) {
             return; // los combos se están recargando

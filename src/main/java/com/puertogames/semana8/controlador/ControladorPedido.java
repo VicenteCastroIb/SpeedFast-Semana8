@@ -10,10 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Controlador de Pedidos: valida los datos que llegan desde la vista
- * y delega las operaciones de base de datos al PedidoDAO.
- */
+// Controlador de Pedidos: valida los datos de la vista y delega en PedidoDAO
 public class ControladorPedido {
 
     // Iniciamos su DAO para conversar con BD
@@ -71,10 +68,7 @@ public class ControladorPedido {
         pedidoDAO.delete(id);
     }
 
-    /**
-     * Recarga el modelo de la tabla con los pedidos de la BD.
-     * Se llama al abrir la ventana y después de cada agregar/editar/eliminar.
-     */
+    // Recarga la tabla con los pedidos de la BD, aplicando los filtros
     public void cargarTabla(DefaultTableModel modelo, EstadoPedido estado, TipoPedido tipo) throws SQLException {
         modelo.setRowCount(0); // Vaciamos tabla
         for (Pedido p : listarPedidos(estado, tipo)) { // Recorre lista de la BD

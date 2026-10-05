@@ -13,10 +13,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-/**
- * Controlador de Entregas: valida los datos que llegan desde la vista
- * y delega las operaciones de base de datos al EntregaDAO.
- */
+// Controlador de Entregas: valida los datos de la vista y delega en EntregaDAO
 public class ControladorEntrega {
 
     // Iniciamos su DAO para conversar con BD

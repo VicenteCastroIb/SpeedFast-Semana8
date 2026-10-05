@@ -3,10 +3,7 @@ package com.puertogames.semana8.vista;
 import javax.swing.*;
 import java.awt.*;
 
-
-// Ventana principal de SpeedFast, menú desde el que se abren
-// las gestiones de repartidores, pedidos y entregas.
-
+// Menú principal: abre las gestiones de repartidores, pedidos y entregas
 public class VentanaPrincipal extends JFrame {
 
     // Componentes de la ventana

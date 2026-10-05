@@ -15,10 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Implementación JDBC de PedidoDAO.
- * Ejecuta las operaciones CRUD sobre la tabla pedidos.
- */
+// Implementación JDBC de PedidoDAO: CRUD sobre la tabla pedidos
 public class PedidoDAOImpl implements PedidoDAO {
 
     private static final Logger LOGGER = Logger.getLogger(PedidoDAOImpl.class.getName());

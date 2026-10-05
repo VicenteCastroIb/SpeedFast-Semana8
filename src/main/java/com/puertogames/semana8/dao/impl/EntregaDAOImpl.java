@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-//Gestiona las operaciones CRUD sobre la tabla entregas
+// Implementación JDBC de EntregaDAO: CRUD sobre la tabla entregas
 public class EntregaDAOImpl implements EntregaDAO {
 
     private static final Logger LOGGER = Logger.getLogger(EntregaDAOImpl.class.getName());
@@ -24,8 +23,7 @@ public class EntregaDAOImpl implements EntregaDAO {
                     "JOIN pedidos p ON p.id = e.id_pedido " +
                     "JOIN repartidores r ON r.id = e.id_repartidor";
 
-// Registra una nueva entrega en la base de datos.
-// Guarda solo los id del pedido y del repartidor
+    // Inserta una entrega nueva, guardando los id de pedido y repartidor
     @Override
     public void create(Entrega entrega) throws SQLException {
         String sql = "INSERT INTO entregas (id_pedido, id_repartidor, fecha, hora) VALUES (?, ?, ?, ?)";
@@ -41,9 +39,7 @@ public class EntregaDAOImpl implements EntregaDAO {
         }
     }
 
-
-// Retorna todas las entregas con los datos de su pedido y repartidor,
-
+    // Retorna todas las entregas, de la más reciente a la más antigua
     @Override
     public List<Entrega> readAll() throws SQLException {
         List<Entrega> listaEntregas = new ArrayList<>();
@@ -60,8 +56,7 @@ public class EntregaDAOImpl implements EntregaDAO {
         return listaEntregas;
     }
 
-// Retorna las entregas asociadas al pedido indicado.
-
+    // Retorna las entregas asociadas al pedido indicado
     @Override
     public List<Entrega> readByPedido(int idPedido) throws SQLException {
         List<Entrega> listaEntregasPorPedido = new ArrayList<>();
@@ -81,9 +76,7 @@ public class EntregaDAOImpl implements EntregaDAO {
         return listaEntregasPorPedido;
     }
 
-
-// Retorna las entregas realizadas por el repartidor indicado.
-
+    // Retorna las entregas realizadas por el repartidor indicado
     @Override
     public List<Entrega> readByRepartidor(int idRepartidor) throws SQLException {
         List<Entrega> listaEntregaPorRepartidor = new ArrayList<>();
@@ -102,8 +95,7 @@ public class EntregaDAOImpl implements EntregaDAO {
         return listaEntregaPorRepartidor;
     }
 
-// Actualiza el pedido, repartidor, fecha y hora de una entrega existente
-
+    // Actualiza una entrega existente según su id
     @Override
     public void update(Entrega entrega) throws SQLException {
         String sql = "UPDATE entregas SET id_pedido=?, id_repartidor=?, fecha=?, hora=? WHERE id=?";
@@ -120,9 +112,7 @@ public class EntregaDAOImpl implements EntregaDAO {
         }
     }
 
-
-// Elimina la entrega con el id indicado.
-
+    // Elimina la entrega con el id indicado
     @Override
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM entregas WHERE id=?";
@@ -135,10 +125,7 @@ public class EntregaDAOImpl implements EntregaDAO {
         }
     }
 
-
-// Convierte la fila actual del ResultSet en una Entrega,
-// construyendo también su Pedido y Repartidor a partir del JOIN.
-
+    // Convierte la fila del ResultSet en una Entrega con su Pedido y Repartidor
     private Entrega mapearEntrega(ResultSet rs) throws SQLException {
         Pedido pedido = new Pedido(
                 rs.getInt("id_pedido"),

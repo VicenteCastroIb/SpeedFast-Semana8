@@ -8,11 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Controlador de Repartidores: valida los datos que llegan desde la vista
- * y delega las operaciones de base de datos al RepartidorDAO.
- */
-
+// Controlador de Repartidores: valida los datos de la vista y delega en RepartidorDAO
 public class ControladorRepartidor {
 
     // Iniciamos su DAO para conversar con BD
@@ -54,10 +50,7 @@ public class ControladorRepartidor {
         repartidorDAO.delete(id);
     }
 
-    /**
-     * Recarga el modelo de la tabla con los repartidores de la BD.
-     * Se llama al abrir la ventana y después de cada agregar/editar/eliminar.
-     */
+    // Recarga la tabla con los repartidores de la BD
     public void cargarTabla(DefaultTableModel modelo) throws SQLException {
         modelo.setRowCount(0); // Vaciamos tabla
         for (Repartidor r : listarRepartidores()) { // Recorre lista de la BD

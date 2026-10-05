@@ -10,10 +10,7 @@ import java.awt.*;
 import java.sql.SQLException;
 
 
-/**
- * Ventana de gestión de Pedidos, permite registrar, editar,
- * eliminar y listar Pedidos.
- */
+// Ventana de gestión de pedidos: registrar, editar, eliminar y listar
 public class GestionPedidos extends JFrame {
 
     // Componentes de la ventana
@@ -34,7 +31,7 @@ public class GestionPedidos extends JFrame {
     // Modelo para mostrar datos de BD
     private DefaultTableModel modelo;
 
-    // Contructor para configurar ventana
+    // Constructor para configurar ventana
     public GestionPedidos() {
         setTitle("SpeedFast - Gestión de Pedidos");
         setSize(600, 450);
@@ -106,7 +103,7 @@ public class GestionPedidos extends JFrame {
         tblPedidos.setModel(modelo);
         tblPedidos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // Al seleccionar una fila, copia su nombre al formulario
+        // Al seleccionar una fila, copia sus datos al formulario
         tblPedidos.getSelectionModel().addListSelectionListener(e -> {
             int fila = tblPedidos.getSelectedRow();
             if (fila >= 0) {
@@ -203,7 +200,7 @@ public class GestionPedidos extends JFrame {
                     "Error de base de datos", JOptionPane.ERROR_MESSAGE);
         }
     }
-    // Toma el id de la fila seleccionada y el nombre del formulario, y actualiza el Pedido
+    // Toma el id de la fila seleccionada y los datos del formulario, y actualiza el pedido
     private void editarPedido() {
         try {
             controlador.editarPedido(obtenerIdSeleccionado() ,txtDireccion.getText(), (TipoPedido) cmbTipo.getSelectedItem(), (EstadoPedido) cmbEstado.getSelectedItem());

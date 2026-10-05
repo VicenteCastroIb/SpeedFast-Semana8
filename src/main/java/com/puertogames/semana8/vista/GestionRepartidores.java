@@ -8,10 +8,7 @@ import java.awt.*;
 import java.sql.SQLException;
 
 
-/**
- * Ventana de gestión de repartidores, permite registrar, editar,
- * eliminar y listar repartidores.
- */
+// Ventana de gestión de repartidores: registrar, editar, eliminar y listar
 public class GestionRepartidores extends JFrame {
 
     // Componentes de la ventana
@@ -26,7 +23,7 @@ public class GestionRepartidores extends JFrame {
     // Modelo para mostrar datos de BD
     private DefaultTableModel modelo;
 
-    // Contructor para configurar ventana
+    // Constructor para configurar ventana
     public GestionRepartidores() {
         setTitle("SpeedFast - Gestión de Repartidores");
         setSize(500, 400);
