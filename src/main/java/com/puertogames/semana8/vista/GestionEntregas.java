@@ -46,6 +46,8 @@ public class GestionEntregas extends JFrame {
     private DefaultTableModel modelo;
     // Indica que los combos se están recargando, para no refrescar la tabla a medias
     private boolean cargandoCombos = false;
+    // Indica que la tabla se está refrescando sola, para no pisar lo que el usuario tiene en el formulario
+    private boolean refrescandoTabla = false;
 
     // Constructor para configurar ventana
     public GestionEntregas() {
@@ -61,12 +63,12 @@ public class GestionEntregas extends JFrame {
         limpiarFormulario();
         cargarTabla();
 
-        // Cada vez que se vuelve a esta ventana, se refrescan los combos
+        // Cada vez que se vuelve a esta ventana, se refrescan los combos y la tabla
         // por si se crearon, editaron o eliminaron pedidos o repartidores
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowActivated(WindowEvent e) {
-                cargarCombos(false);
+                refrescarAlVolver();
             }
         });
     }
@@ -124,9 +126,10 @@ public class GestionEntregas extends JFrame {
         tblEntregas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // Al seleccionar una fila, copia sus datos al formulario
+        // (excepto en el refresco automático, para conserva lo que el usuario estaba editando)
         tblEntregas.getSelectionModel().addListSelectionListener(e -> {
             int fila = tblEntregas.getSelectedRow();
-            if (fila >= 0) {
+            if (fila >= 0 && !refrescandoTabla) {
                 cmbPedido.setSelectedItem(modelo.getValueAt(fila, 1));
                 cmbRepartidor.setSelectedItem(modelo.getValueAt(fila, 2));
                 txtFecha.setText(modelo.getValueAt(fila, 3).toString());
@@ -150,10 +153,8 @@ public class GestionEntregas extends JFrame {
     /**
      * Carga en los combos los pedidos y repartidores que existen en la BD.
      * Conserva lo que estaba seleccionado antes de recargar.
-     * avisarError, si es true muestra un mensaje cuando falla la BD, al refrescar
-     * en segundo plano va en false, para no repetir el aviso cada vez que la ventana se activa.
      */
-    private void cargarCombos(boolean avisarError) {
+    private boolean cargarCombos(boolean avisarError) {
         cargandoCombos = true;
         try {
             // Guardamos la selección actual para restaurarla después
@@ -162,7 +163,7 @@ public class GestionEntregas extends JFrame {
             Object filtroPedidoActual = cmbFiltroPedido.getSelectedItem();
             Object filtroRepartidorActual = cmbFiltroRepartidor.getSelectedItem();
 
-            // Primero se consulta la BD: si falla, los combos quedan como estaban
+            // Primero se consulta la BD, si falla los combos quedan como estaban
             List<Pedido> pedidos = controladorPedido.listarPedidos();
             List<Repartidor> repartidores = controladorRepartidor.listarRepartidores();
 
@@ -187,12 +188,14 @@ public class GestionEntregas extends JFrame {
             restaurarSeleccion(cmbRepartidor, repartidorActual);
             restaurarSeleccion(cmbFiltroPedido, filtroPedidoActual);
             restaurarSeleccion(cmbFiltroRepartidor, filtroRepartidorActual);
+            return true;
         } catch (SQLException e) {
             if (avisarError) {
                 JOptionPane.showMessageDialog(this,
                         "No se pudieron cargar los pedidos y repartidores.\n" + e.getMessage(),
                         "Error de base de datos", JOptionPane.ERROR_MESSAGE);
             }
+            return false;
         } finally {
             cargandoCombos = false;
         }
@@ -205,8 +208,43 @@ public class GestionEntregas extends JFrame {
         }
     }
 
-    // Lee los filtros y pide al controlador que recargue la tabla
+    /**
+     * Refresca combos y tabla al volver a esta ventana, sin mostrar avisos.
+     */
+    private void refrescarAlVolver() {
+        if (!cargarCombos(false)) {
+            return; // sin conexión
+        }
+        int idSeleccionado = obtenerIdSeleccionado();
+        refrescandoTabla = true;
+        try {
+            cargarTabla(false);
+            seleccionarFila(idSeleccionado);
+        } finally {
+            refrescandoTabla = false;
+        }
+    }
+
+    // Vuelve a marcar en la tabla la entrega con el id indicadoo
+    private void seleccionarFila(int id) {
+        for (int fila = 0; fila < modelo.getRowCount(); fila++) {
+            if ((int) modelo.getValueAt(fila, 0) == id) {
+                tblEntregas.setRowSelectionInterval(fila, fila);
+                return;
+            }
+        }
+    }
+
+    // Recarga la tabla avisando al usuario si falla la BD
     private void cargarTabla() {
+        cargarTabla(true);
+    }
+
+    /**
+     * Lee los filtros y pide al controlador que recargue la tabla.
+     * avisarError, si es false no muestra mensaje cuando falla la BD (refresco en segundo plano).
+     */
+    private void cargarTabla(boolean avisarError) {
         if (cargandoCombos) {
             return; // los combos se están recargando
         }
@@ -219,9 +257,11 @@ public class GestionEntregas extends JFrame {
         try {
             controlador.cargarTabla(modelo, pedido, repartidor);
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this,
-                    "No se pudieron cargar las entregas.\n" + e.getMessage(),
-                    "Error de base de datos", JOptionPane.ERROR_MESSAGE);
+            if (avisarError) {
+                JOptionPane.showMessageDialog(this,
+                        "No se pudieron cargar las entregas.\n" + e.getMessage(),
+                        "Error de base de datos", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
